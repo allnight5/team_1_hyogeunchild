@@ -3,7 +3,6 @@ package com.sparta.team_1_hyogeunchild.persistence.entity;
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 
@@ -26,10 +25,10 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-
     public User(String username, String password, UserRoleEnum role){
         this.username =username;
         this.password = password;
         this.role = role;
     }
+
 }
