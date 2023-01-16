@@ -10,8 +10,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
-}
-
     @Query(name = "select u from users u where role like 'sel%'")
     List<User> findByUsersRole(String role);
     // 전체 판매자 목록 조회
