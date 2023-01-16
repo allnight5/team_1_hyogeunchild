@@ -1,11 +1,8 @@
 package com.sparta.team_1_hyogeunchild.presentation.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Getter
-@NoArgsConstructor
-public class PromoteRequestDto {
+public class PromoteLossRequestDto {
     private String username;
+    private boolean isSeller = false;
+    private String role = "ROLE_BUYER";
     private String storeName;
 }

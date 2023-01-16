@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ProductRepository extends JpaRepository<Long, Product> {
-    List<Product> findAllByUserId(Long userId);
+public interface ProductRepository extends JpaRepository<Product, Long> {
+//    List<Product> findAllByUserId(Long userId);
     // 전체 상품 목록 조회 매서드
     // 유저 신청이-> 뭐뭐 사겠다.
     // 바로 내용이 바뀐다.

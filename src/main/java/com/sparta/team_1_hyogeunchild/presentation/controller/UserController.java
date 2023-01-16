@@ -1,10 +1,11 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
-
 import com.sparta.team_1_hyogeunchild.business.dto.CreateResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.DeleteResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.LoginResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.PromoteResponseDto;
 import com.sparta.team_1_hyogeunchild.business.service.UserService;
 import com.sparta.team_1_hyogeunchild.presentation.dto.LoginRequestDto;
+import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteRequestDto;
 import com.sparta.team_1_hyogeunchild.presentation.dto.SignUpRequestDto;
 import com.sparta.team_1_hyogeunchild.presentation.dto.UserDeleteRequestDto;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
@@ -25,13 +26,13 @@ public class UserController {
     private final UserService userService;
     //1.회웝가입
     //POST 메소드는 주로 새로운 리소스를 생성(create)할 때 사용. 서버에 데이터 추가 or 작성시
-    @PostMapping("/signup")
 
     //@RequestBody -> 클라이언트에서 JSON 데이터를 요청 본문에 담아서 서버로 보내면,
     //서버에서는 @RequestBody 어노테이션을 사용하여 HTTP 요청 본문에 담긴 값들을 자바객체로 변환시켜, 객체에 저장한다.
     //@Valid
     //->@RequestBody 어노테이션 옆에 @Valid를 작성하면, RequestBody로 들어오는 객체에 대한 검증을 수행한다.
     // 이 검증의 세부적인 사항은 객체 안에 정의를 해두어야 한다.ex)정규표현식
+    @PostMapping("/signup")
     public CreateResponseDto signupPage(@RequestBody @Valid SignUpRequestDto signupRequestDto) {
         CreateResponseDto msg =userService.signUp(signupRequestDto);
         return msg;
@@ -54,4 +55,24 @@ public class UserController {
     public DeleteResponseDto delete(@RequestBody UserDeleteRequestDto deleteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.deleteUser(deleteRequestDto, userDetails.getUser());
     }
+    //4.구매자 -> 판매자로 승급
+    @PutMapping("/admin/rollauthorized")
+    public PromoteResponseDto promoteAuthorization(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.promoteAuthorization(requestDto, userDetails.getUser());
+    }
+
+    //5. 판매자 자격 박탈->구매자
+    @PutMapping("/admin/rolldelete")
+    public PromoteResponseDto buyerAuthorization(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.promoteLossOfAuthority(requestDto, userDetails.getUser());
+    }
+
+    //@GetMapping("/admin/buyerlist")
+    //6. 유저목록조회
+
+    //@GetMapping("/admin/sellerlist")
+    //7. 판매자 목록조회
+
+    // @GetMapping("/admin/registerseller")
+    //8. 등급 업 심사 대기중인 사람들 조회
 }
