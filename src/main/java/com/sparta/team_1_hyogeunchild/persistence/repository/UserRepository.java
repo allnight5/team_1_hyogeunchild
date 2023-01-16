@@ -12,5 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(name = "select u from users u where role like 'sel%'")
     List<User> findByUsersRole(String role);
+
+    void deleteByUsername(String username);
     // 전체 판매자 목록 조회
 }

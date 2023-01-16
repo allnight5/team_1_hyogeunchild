@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignupRequestDto {
+public class SignUpRequestDto {
 
 
     //정규식이 틀렸을때 발생하는 예외 MethodArgumentNotValidException
