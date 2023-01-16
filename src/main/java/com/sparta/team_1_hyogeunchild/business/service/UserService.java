@@ -12,10 +12,8 @@ import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteRequestDto;
 import com.sparta.team_1_hyogeunchild.presentation.dto.SignUpRequestDto;
 import com.sparta.team_1_hyogeunchild.presentation.dto.UserDeleteRequestDto;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
-import com.sun.jdi.request.DuplicateRequestException;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +38,7 @@ public class UserService {
 
         Optional<User> found = userRepository.findByUsername(username);
         if(found.isPresent()){
-            throw new DuplicateRequestException("중복된 사용자가 존재합니다.");
+            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
         UserRoleEnum role = UserRoleEnum.BUYER;
         if(requestDto.isAdmin()){
