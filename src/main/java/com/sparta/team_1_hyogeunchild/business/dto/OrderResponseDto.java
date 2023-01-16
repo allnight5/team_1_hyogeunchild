@@ -11,10 +11,6 @@ public class OrderResponseDto {
 
     private Product product;
 
-//    @ManyToOne
-//    @JoinColumn(name = "User_Id")
-//    private User user;
-
     private OrderResponseDto(Order order) {
         this.totalPrice = order.getTotalPrice();
         this.amount = order.getAmount();

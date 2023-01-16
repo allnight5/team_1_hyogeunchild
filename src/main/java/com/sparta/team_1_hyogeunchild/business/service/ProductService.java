@@ -18,9 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class SellerService {
-
-    private final OrderRepository orderRepository;
+public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     @Transactional
@@ -33,16 +31,8 @@ public class SellerService {
 
         return products.stream().map(ProductResponseDto::from).collect(Collectors.toList());
     }
-    @Transactional
-    public List<OrderResponseDto> getOrders(String userName) {
-        User user = userRepository.findByUsername(userName).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
-        );
 
-        List<Order> orders = orderRepository.findAllByUserName(user.getUsername());
 
-        return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
-    }
     @Transactional
     public String uploadProduct(ProductRequestDto requestDto, String userName) {
 
