@@ -9,11 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
     List<Product> findAllByUserName(String userName);
 
     void deleteById(Long id);
 
     Optional<Product> findByUserId(Long userId);
+
+//    List<Product> findAllByUserId(Long userId);
+
     // 전체 상품 목록 조회 매서드
     // 유저 신청이-> 뭐뭐 사겠다.
     // 바로 내용이 바뀐다.

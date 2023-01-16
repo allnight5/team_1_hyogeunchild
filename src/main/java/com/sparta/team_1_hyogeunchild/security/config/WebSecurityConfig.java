@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -58,10 +59,10 @@ public class WebSecurityConfig {
                 // 잘못하면 두번인증한다. 로그인창으로 바로 이동하게 해주자.
                 // http에서 해본게 아니라서 이걸 회원가입만 열어야할지 로그인만 열어야할지 둘다열어야하는지
                 // http에서 해본사람만 알것이다.
-                .antMatchers("/users/**").permitAll()
+                .antMatchers("/api/users/**").permitAll()
                 .antMatchers("/h2-console").permitAll()
-                .antMatchers("/seller").hasAnyAuthority("ROLE_SELLER", "ROLE_ADMIN")
-                .antMatchers("/admin").hasAnyAuthority("ROLE_ADMIN")
+//                .antMatchers("/api/seller").hasAnyAuthority("ROLE_SELLER", "ROLE_ADMIN")
+//                .antMatchers("/api/admin").hasAnyAuthority("ROLE_ADMIN")
 //                .requestMatchers("/api/post/get/**/comment").permitAll()
                 .anyRequest().authenticated()//인증이 되어야 한다는 이야기이다.
                 //.anonymous() : 인증되지 않은 사용자도 접근할 수 있다.
