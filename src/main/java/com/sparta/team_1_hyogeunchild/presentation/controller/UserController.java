@@ -19,7 +19,7 @@ import javax.validation.Valid;
 
 @RestController
 //메서드 혹은 클래스 단위로 Mapping을 주어 중복 URL을 공통으로 처리할 수 있다
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 // final이 붙거나 @NotNull 이 붙은 필드의 생성자를 자동 생성해주는 롬복 어노테이션
 @RequiredArgsConstructor
 public class UserController {
@@ -55,24 +55,5 @@ public class UserController {
     public DeleteResponseDto delete(@RequestBody UserDeleteRequestDto deleteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.deleteUser(deleteRequestDto, userDetails.getUser());
     }
-    //4.구매자 -> 판매자로 승급
-    @PutMapping("/admin/rollauthorized")
-    public PromoteResponseDto promoteAuthorization(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.promoteAuthorization(requestDto, userDetails.getUser());
-    }
 
-    //5. 판매자 자격 박탈->구매자
-    @PutMapping("/admin/rolldelete")
-    public PromoteResponseDto buyerAuthorization(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.promoteLossOfAuthority(requestDto, userDetails.getUser());
-    }
-
-    //@GetMapping("/admin/buyerlist")
-    //6. 유저목록조회
-
-    //@GetMapping("/admin/sellerlist")
-    //7. 판매자 목록조회
-
-    // @GetMapping("/admin/registerseller")
-    //8. 등급 업 심사 대기중인 사람들 조회
 }
