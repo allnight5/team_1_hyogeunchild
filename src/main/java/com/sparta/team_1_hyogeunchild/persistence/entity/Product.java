@@ -20,7 +20,8 @@ public class Product {
     // 상품 양(남은 개수)
     @Column(nullable = false)
     private Long price;
-    @Column(nullable = false)
+
+//    @Column(nullable = false)
     private String storeName;
     @ManyToOne
     @JoinColumn(name = "User_Id")
@@ -30,15 +31,15 @@ public class Product {
         this.productName = requestDto.getProductName();
         this.price = requestDto.getPrice();
         this.amount = requestDto.getAmount();
-        this.storeName = requestDto.getStoreName();
+        this.storeName = user.getStoreName();
         this.users = user;
     }
 
 
-    public void update(ProductRequestDto requestDto) {
+    public void update(ProductRequestDto requestDto, User user) {
         this.productName = requestDto.getProductName();
         this.amount = requestDto.getAmount();
         this.price = requestDto.getPrice();
-        this.storeName = requestDto.getStoreName();
+        this.storeName = user.getStoreName();
     }
 }

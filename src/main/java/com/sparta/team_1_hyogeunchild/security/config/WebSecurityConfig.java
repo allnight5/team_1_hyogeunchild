@@ -63,12 +63,15 @@ public class WebSecurityConfig {
                 .antMatchers("/h2-console").permitAll()
 //                .antMatchers("/users/seller").hasAnyAuthority("ROLE_SELLER", "ROLE_ADMIN")
                 .antMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers("/api/products/**").hasAnyAuthority("ROLE_SELLER")
 //                .requestMatchers("/api/post/get/**/comment").permitAll()
                 .anyRequest().authenticated()//인증이 되어야 한다는 이야기이다.
                 //.anonymous() : 인증되지 않은 사용자도 접근할 수 있다.
                 // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 //                .formLogin().failureHandler();
+
+                http.exceptionHandling().accessDeniedHandler(new AccessDeniedHandlerImpl());
 
 //        http.formLogin().loginPage("/api/user/login-page").permitAll();
         // 이 부분에서 login 관련 문제 발생
