@@ -2,6 +2,7 @@ package com.sparta.team_1_hyogeunchild.business.service;
 
 import com.sparta.team_1_hyogeunchild.business.dto.ProductRequestDto;
 import com.sparta.team_1_hyogeunchild.business.dto.ProductResponseDto;
+import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
@@ -33,6 +34,22 @@ public class ProductService {
             productResponseDtoList.add(productResponseDto);
         }
 
+        return productResponseDtoList;
+    }
+
+    @Transactional
+    public List<ProductResponseDto> getAllProducts(){
+        List<User> users = userRepository.findAllByRole(UserRoleEnum.SELLER);
+
+        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+
+        for (User user : users) {
+            List<Product> productList = productRepository.findAllByUsersUsername(user.getUsername());
+            for (Product product : productList) {
+                ProductResponseDto responseDto = new ProductResponseDto(product, user);
+                productResponseDtoList.add(responseDto);
+            }
+        }
         return productResponseDtoList;
     }
 
