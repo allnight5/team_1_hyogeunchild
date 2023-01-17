@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findAllByUserName(String userName);
+    List<Product> findAllByUsersUsername(String userName);
 
     void deleteById(Long id);
 
-    Optional<Product> findByUserId(Long userId);
+    Optional<Product> findByUsersId(Long userId);
 
 //    List<Product> findAllByUserId(Long userId);
 

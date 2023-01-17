@@ -24,14 +24,14 @@ public class Product {
     private String storeName;
     @ManyToOne
     @JoinColumn(name = "User_Id")
-    private User user;
+    private User users;
 
     public Product(ProductRequestDto requestDto, User user) {
         this.productName = requestDto.getProductName();
         this.price = requestDto.getPrice();
         this.amount = requestDto.getAmount();
         this.storeName = requestDto.getStoreName();
-        this.user = user;
+        this.users = user;
     }
 
 

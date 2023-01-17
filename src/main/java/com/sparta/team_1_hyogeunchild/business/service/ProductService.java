@@ -27,7 +27,7 @@ public class ProductService {
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
 
-        List<Product> products = productRepository.findAllByUserName(user.getUsername());
+        List<Product> products = productRepository.findAllByUsersUsername(user.getUsername());
 
         return products.stream().map(ProductResponseDto::from).collect(Collectors.toList());
     }
@@ -51,7 +51,7 @@ public class ProductService {
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
 
-        Product product = productRepository.findByUserId(user.getId()).orElseThrow(
+        Product product = productRepository.findByUsersId(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
         );
 
@@ -66,7 +66,7 @@ public class ProductService {
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
 
-        Product product = productRepository.findByUserId(user.getId()).orElseThrow(
+        Product product = productRepository.findByUsersId(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
         );
         productRepository.deleteById(product.getId());

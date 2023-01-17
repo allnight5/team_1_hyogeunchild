@@ -17,8 +17,8 @@ public class OrderService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     @Transactional
-    public List<OrderResponseDto> getOrders(String userName) {
-        User user = userRepository.findByUsername(userName).orElseThrow(
+    public List<OrderResponseDto> getOrders(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
 
@@ -27,9 +27,8 @@ public class OrderService {
 
         //그래서 Order를 Craete 할 때, 원하는 가게의 이름 / 주인장 id 라던지 해서 리퀘스를 날리면 우리가 받아서 체크해야 한다.
 
-        List<Order> orders = orderRepository.findAllByUserName(user.getUsername());
+        List<Order> orders = orderRepository.findAllByUserUsername(user.getUsername());
 
         return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
     }
-
 }

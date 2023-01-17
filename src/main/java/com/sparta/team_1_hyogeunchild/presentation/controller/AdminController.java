@@ -2,6 +2,7 @@ package com.sparta.team_1_hyogeunchild.presentation.controller;
 
 import com.sparta.team_1_hyogeunchild.business.dto.PromoteResponseDto;
 import com.sparta.team_1_hyogeunchild.business.service.AdminService;
+import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteLossRequestDto;
 import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteRequestDto;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
