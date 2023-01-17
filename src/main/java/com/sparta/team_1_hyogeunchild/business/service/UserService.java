@@ -56,12 +56,11 @@ public class UserService {
         String password = requestDto.getPassword();
 
         User user = userRepository.findByUsername(username).orElseThrow(
-                ()-> new IllegalArgumentException("사용자를 찾을수 없습니다.")
+                ()-> new SecurityException("사용자를 찾을수 없습니다.")
         );
         if(!passwordEncoder.matches(password, user.getPassword())){
-            throw new IllegalArgumentException("사용자를 찾을수 없습니다.");
+            throw new SecurityException("사용자를 찾을수 없습니다.");
         }
-
         return new LoginResponseDto(jwtUtil.createToken(user.getUsername(), user.getRole()));
     }
 
