@@ -1,8 +1,5 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
-import com.sparta.team_1_hyogeunchild.business.dto.CreateResponseDto;
-import com.sparta.team_1_hyogeunchild.business.dto.DeleteResponseDto;
-import com.sparta.team_1_hyogeunchild.business.dto.LoginResponseDto;
-import com.sparta.team_1_hyogeunchild.business.dto.PromoteResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.*;
 import com.sparta.team_1_hyogeunchild.business.service.UserService;
 import com.sparta.team_1_hyogeunchild.presentation.dto.LoginRequestDto;
 import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteRequestDto;
@@ -55,5 +52,9 @@ public class UserController {
     public DeleteResponseDto delete(@RequestBody UserDeleteRequestDto deleteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.deleteUser(deleteRequestDto, userDetails.getUser());
     }
-
+    //4. 판매자로 요청
+    @PostMapping("/promote")
+    public PromoteUserResponseDto promoteUser(@RequestBody @Valid PromoteUserRequestDto requestDto){
+        return userService.promoteUser(requestDto);
+    }
 }
