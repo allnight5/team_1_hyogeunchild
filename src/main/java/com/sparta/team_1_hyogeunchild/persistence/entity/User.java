@@ -32,7 +32,7 @@ public class User {
         this.password = password;
         this.role = role;
     }
-    public void update(String storeName, UserRoleEnum role) {
+    public void promote(String storeName, UserRoleEnum role) {
         this.storeName = storeName;
         this.role = role;
     }

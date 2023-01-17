@@ -40,7 +40,7 @@ public class AdminService {
             User user = userRepository.findByUsername(username).orElseThrow(
                     ()-> new IllegalArgumentException("사용자를 찾을수 없습니다.")
             );
-            user.update(storeName, seller);
+            user.promote(storeName, seller);
             return new PromoteResponseDto(message);
         }
         throw new SecurityException("관리자가 아닙니다.");

@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     private final AdminService adminService;
     //1.구매자 -> 판매자로 승급
-    @PutMapping("/rollauthorized")
-    public PromoteResponseDto promoteAuthorization(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @PutMapping("/promote")
+    public PromoteResponseDto promote(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return adminService.promoteAuthorization(requestDto, userDetails.getUser());
     }
 
     //2. 판매자 자격 박탈->구매자
-    @PutMapping("/rolldelete")
-    public PromoteResponseDto buyerAuthorization(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @PutMapping("/degrade")
+    public PromoteResponseDto degrade(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return adminService.promoteLossOfAuthority(requestDto, userDetails.getUser());
     }
 
