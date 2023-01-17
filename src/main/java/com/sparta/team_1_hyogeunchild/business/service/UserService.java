@@ -3,7 +3,9 @@ package com.sparta.team_1_hyogeunchild.business.service;
 import com.sparta.team_1_hyogeunchild.business.dto.CreateResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.DeleteResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.LoginResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.PromoteUserResponseDto;
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
+import com.sparta.team_1_hyogeunchild.persistence.entity.Promote;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import com.sparta.team_1_hyogeunchild.presentation.dto.LoginRequestDto;
@@ -75,5 +77,18 @@ public class UserService {
             return new DeleteResponseDto("삭제 성공");
         }
         throw new SecurityException("가입한 회원만이 탈퇴할 수 있습니다");
+    }
+
+    //4. 판매 상품 조회
+
+
+    //5. 판매자 조회
+
+    //6. 판매자 전환 폼 요청
+    @Transactional
+    public PromoteUserResponseDto promoteUser(PromoteUserRequestDto requestDto){
+        Promote promote = new Promote(requestDto);
+        promoteRepository.save(promote);
+        return new PromoteUserResponseDto(promote);
     }
 }
