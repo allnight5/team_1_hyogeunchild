@@ -28,8 +28,7 @@ public class UserController {
     // 이 검증의 세부적인 사항은 객체 안에 정의를 해두어야 한다.ex)정규표현식
     @PostMapping("/signup")
     public CreateResponseDto signupPage(@RequestBody @Valid SignUpRequestDto signupRequestDto) {
-        CreateResponseDto msg =userService.signUp(signupRequestDto);
-        return msg;
+        return userService.signUp(signupRequestDto);
     }
     //2.로그인
     @PostMapping("/login")

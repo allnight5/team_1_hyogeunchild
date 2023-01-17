@@ -17,7 +17,7 @@ public class Promote {
 
     @Column(nullable = false)
     private String storeName;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false)
     private String password;
