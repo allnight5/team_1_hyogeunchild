@@ -90,6 +90,7 @@ public class UserService {
     //6. 판매자 전환 폼 요청
     @Transactional
     public PromoteUserResponseDto promoteUser(PromoteUserRequestDto requestDto, String username){
+        // 체크로직 -> 중복 사용자 없어야 한다. unique 삐
         Promote promote = new Promote(requestDto, username);
         promoteRepository.save(promote);
         return new PromoteUserResponseDto(promote);

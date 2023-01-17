@@ -43,5 +43,4 @@ public class controllerExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn(exception.getMessage());
         return new controllerExceptionResponseDto(exception.getMessage(),400);
     }
-
 }

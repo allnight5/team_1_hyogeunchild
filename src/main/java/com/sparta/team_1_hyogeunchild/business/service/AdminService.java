@@ -46,13 +46,14 @@ public class AdminService {
         Promote promote = promoteRepository.findByUsername(username).orElseThrow(
                 ()-> new IllegalArgumentException("판매자 권한을 신청하는 유저가 아닙니다.")
         );
+
         if(!user.getRole().equals(UserRoleEnum.ADMIN)){
-            if(user.getRole().equals(UserRoleEnum.SELLER)){
+            if(user.getRole().equals(UserRoleEnum.BUYER)){
                 promoteRepository.delete(promote);
-                user.promote(null, seller);
+                user.promote(promote.getStoreName(), seller);
                 return new PromoteAdminResponseDto(message);
             }
-            user.promote(promote.getStoreName(), seller);
+            user.promote(null, seller);
             return new PromoteAdminResponseDto(message);
         }
         throw new SecurityException("관리자의 권한을 변경할수없습니다..");
