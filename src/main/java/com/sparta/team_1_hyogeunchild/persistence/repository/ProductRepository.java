@@ -1,9 +1,9 @@
 package com.sparta.team_1_hyogeunchild.persistence.repository;
 
 import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +13,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByUsersUsername(String userName);
 
     Optional<Product> findByIdAndUsersId(Long id, Long userId);
+    Page<Product> findAllById(int id, int page, Pageable pageable);
+    Page<Product> findAllByUsername(String username, int i, Pageable pageable);
 
     void deleteById(Long id);
     Optional<Product> findByUsersId(Long userId);

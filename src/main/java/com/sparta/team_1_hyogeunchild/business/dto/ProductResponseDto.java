@@ -23,6 +23,13 @@ public class ProductResponseDto {
         this.storeName = user.getStoreName();
     }
 
+    public ProductResponseDto(Product product) {
+        this.productName = product.getProductName();
+        this.amount = product.getAmount();
+        this.price = product.getPrice();
+        this.storeName = product.getStoreName();
+    }
+
 
 //    public static ProductResponseDto from(Product product){
 //        return new ProductResponseDto(product);
