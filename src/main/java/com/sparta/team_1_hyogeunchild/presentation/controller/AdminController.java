@@ -1,12 +1,9 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 
-import com.sparta.team_1_hyogeunchild.business.dto.PromoteResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.PromoteAdminResponseDto;
 import com.sparta.team_1_hyogeunchild.business.service.AdminService;
-import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteLossRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteRequestDto;
-import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
+import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteAdminRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,14 +15,14 @@ public class AdminController {
     private final AdminService adminService;
     //1.구매자 -> 판매자로 승급
     @PutMapping("/promote")
-    public PromoteResponseDto promote(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return adminService.promoteAuthorization(requestDto, userDetails.getUser());
+    public PromoteAdminResponseDto promote(@RequestBody PromoteAdminRequestDto requestDto){
+        return adminService.promoteAuthorization(requestDto);
     }
 
     //2. 판매자 자격 박탈->구매자
     @PutMapping("/degrade")
-    public PromoteResponseDto degrade(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return adminService.promoteLossOfAuthority(requestDto, userDetails.getUser());
+    public PromoteAdminResponseDto degrade(@RequestBody PromoteAdminRequestDto requestDto){
+        return adminService.promoteLossOfAuthority(requestDto);
     }
 
 //    3. 유저목록조회

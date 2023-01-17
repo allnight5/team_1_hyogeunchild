@@ -1,7 +1,9 @@
 package com.sparta.team_1_hyogeunchild.exception;
 
 import com.sparta.team_1_hyogeunchild.exception.dto.controllerExceptionResponseDto;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,4 +35,13 @@ public class controllerExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn(exception.getMessage());
         return new controllerExceptionResponseDto(exception.getMessage(),400);
     }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    //상태코드를 400으로 집어넣어줌
+    @ExceptionHandler(SecurityException.class)
+    //ExceptionHandler이다 ()안에 특정 예외클래스를 지정해주면 컨트롤러단에서 해당 예외가 발생했을때 아래의 메소드를 수행하겠다 이말임
+    public controllerExceptionResponseDto SecurityExceptionExceptionHandling(SecurityException exception) {
+        log.warn(exception.getMessage());
+        return new controllerExceptionResponseDto(exception.getMessage(),400);
+    }
+
 }

@@ -5,10 +5,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PromoteResponseDto {
+public class PromoteAdminResponseDto {
     private String message;
 
-    public PromoteResponseDto(String message){
+    public PromoteAdminResponseDto(String message){
         this.message = message;
     }
 }

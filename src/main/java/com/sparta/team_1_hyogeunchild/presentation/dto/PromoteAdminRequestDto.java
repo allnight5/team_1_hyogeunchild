@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PromoteRequestDto {
+public class PromoteAdminRequestDto {
     private String username;
-    private String storeName;
 }

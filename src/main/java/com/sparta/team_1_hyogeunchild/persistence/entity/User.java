@@ -1,7 +1,6 @@
 package com.sparta.team_1_hyogeunchild.persistence.entity;
 
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
-import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +15,7 @@ public class User {
     @Column(name = "User_ID")
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
@@ -27,6 +26,7 @@ public class User {
     private UserRoleEnum role;
     @Column
     private String storeName;
+
     public User(String username, String password, UserRoleEnum role){
         this.username =username;
         this.password = password;

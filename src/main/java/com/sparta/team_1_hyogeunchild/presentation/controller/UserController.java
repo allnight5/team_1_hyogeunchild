@@ -1,10 +1,7 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 import com.sparta.team_1_hyogeunchild.business.dto.*;
 import com.sparta.team_1_hyogeunchild.business.service.UserService;
-import com.sparta.team_1_hyogeunchild.presentation.dto.LoginRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.SignUpRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.UserDeleteRequestDto;
+import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +51,7 @@ public class UserController {
     }
     //4. 판매자로 요청
     @PostMapping("/promote")
-    public PromoteUserResponseDto promoteUser(@RequestBody @Valid PromoteUserRequestDto requestDto){
-        return userService.promoteUser(requestDto);
+    public PromoteUserResponseDto promoteUser(@RequestBody @Valid PromoteUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.promoteUser(requestDto, userDetails.getUser().getUsername());
     }
 }

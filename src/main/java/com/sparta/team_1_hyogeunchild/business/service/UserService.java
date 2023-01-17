@@ -7,8 +7,10 @@ import com.sparta.team_1_hyogeunchild.business.dto.PromoteUserResponseDto;
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Promote;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
+import com.sparta.team_1_hyogeunchild.persistence.repository.PromoteRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import com.sparta.team_1_hyogeunchild.presentation.dto.LoginRequestDto;
+import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteUserRequestDto;
 import com.sparta.team_1_hyogeunchild.presentation.dto.SignUpRequestDto;
 import com.sparta.team_1_hyogeunchild.presentation.dto.UserDeleteRequestDto;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class UserService {
     // 회원가입 로직
     private final UserRepository userRepository;
+    private final PromoteRepository promoteRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private static final String ADMIN_TOKEN = "D1d@A$5dm4&4D1d1i34n%7";
@@ -86,8 +89,8 @@ public class UserService {
 
     //6. 판매자 전환 폼 요청
     @Transactional
-    public PromoteUserResponseDto promoteUser(PromoteUserRequestDto requestDto){
-        Promote promote = new Promote(requestDto);
+    public PromoteUserResponseDto promoteUser(PromoteUserRequestDto requestDto, String username){
+        Promote promote = new Promote(requestDto, username);
         promoteRepository.save(promote);
         return new PromoteUserResponseDto(promote);
     }
