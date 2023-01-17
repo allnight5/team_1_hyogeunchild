@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface PromoteRepository extends JpaRepository<Promote, Long> {
 
     Optional<Promote> findByUsername(String username);
-    void deleteByUsername(String username);
+    Optional<Promote> deleteByUsername(String username);
 }

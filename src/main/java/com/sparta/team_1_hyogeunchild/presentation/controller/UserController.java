@@ -1,15 +1,21 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 import com.sparta.team_1_hyogeunchild.business.dto.*;
 import com.sparta.team_1_hyogeunchild.business.service.UserService;
+import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
 import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 //메서드 혹은 클래스 단위로 Mapping을 주어 중복 URL을 공통으로 처리할 수 있다
@@ -51,6 +57,17 @@ public class UserController {
     //4. 판매자로 요청
     @PostMapping("/promote")
     public PromoteUserResponseDto promoteUser(@RequestBody @Valid PromoteUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.promoteUser(requestDto, userDetails.getUser().getUsername());
+        return userService.promoteUser(requestDto, userDetails.getUser());
+    }
+    //4-1. 판매자 요청 승인 전 취소
+    @DeleteMapping("/promote")
+    public String deletePromote(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        userService.deletePromote(userDetails.getUser());
+        return "삭제 완료되었습니다.";
+    }
+    //5. 판매자 목록조회
+    @PostMapping("/sellerlist")
+    public UserResponseDto getAllSellers(@PageableDefault Pageable pageable, User user){
+        userService.getAllSellers();
     }
 }
