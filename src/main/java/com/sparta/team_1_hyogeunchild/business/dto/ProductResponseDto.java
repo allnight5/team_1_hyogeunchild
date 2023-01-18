@@ -16,12 +16,13 @@ public class ProductResponseDto {
     private Long price;
     private String storeName;
 
-    public ProductResponseDto(Product product, User user) {
+    public ProductResponseDto(Product product) {
         this.productName = product.getProductName();
         this.amount = product.getAmount();
         this.price = product.getPrice();
-        this.storeName = user.getStoreName();
+        this.storeName = product.getStoreName();
     }
+
 
 
 //    public static ProductResponseDto from(Product product){

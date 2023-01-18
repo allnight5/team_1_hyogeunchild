@@ -5,6 +5,7 @@ import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,7 @@ public class UserController {
     }
     //4. 판매자로 요청
     @PostMapping("/promote")
+    @PreAuthorize("hasRole('BUYER')")
     public PromoteUserResponseDto promoteUser(@RequestBody @Valid PromoteUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.promoteUser(requestDto, userDetails.getUser().getUsername());
     }

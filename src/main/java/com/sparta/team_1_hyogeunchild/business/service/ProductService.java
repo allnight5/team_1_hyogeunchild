@@ -30,28 +30,45 @@ public class ProductService {
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
 
         for (Product product : products) {
-            ProductResponseDto productResponseDto = new ProductResponseDto(product,user);
+            ProductResponseDto productResponseDto = new ProductResponseDto(product);
             productResponseDtoList.add(productResponseDto);
         }
 
         return productResponseDtoList;
     }
 
+//    @Transactional
+//    public List<ProductResponseDto> getAllProducts(){
+//        List<User> users = userRepository.findAllByRole(UserRoleEnum.SELLER);
+//
+//        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+//
+//
+//
+//        for (User user : users) {
+//            List<Product> productList = productRepository.findAllByUsersUsername(user.getUsername());
+//            for (Product product : productList) {
+//                ProductResponseDto responseDto = new ProductResponseDto(product, user);
+//                productResponseDtoList.add(responseDto);
+//            }
+//        }
+//        return productResponseDtoList;
+//    }
+//    // 확인해보자.
+
     @Transactional
     public List<ProductResponseDto> getAllProducts(){
         List<User> users = userRepository.findAllByRole(UserRoleEnum.SELLER);
 
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
-
-        for (User user : users) {
-            List<Product> productList = productRepository.findAllByUsersUsername(user.getUsername());
-            for (Product product : productList) {
-                ProductResponseDto responseDto = new ProductResponseDto(product, user);
-                productResponseDtoList.add(responseDto);
-            }
+        List<Product> productList = productRepository.findAll();
+        for (Product product : productList) {
+            ProductResponseDto productResponseDto = new ProductResponseDto(product);
         }
+
         return productResponseDtoList;
     }
+    // 확인해보자.
 
     @Transactional
     public String uploadProduct(ProductRequestDto requestDto, String userName) {
@@ -77,7 +94,7 @@ public class ProductService {
 
         product.update(requestDto, user);
 
-        return new ProductResponseDto(product, user);
+        return new ProductResponseDto(product);
     }
 
     @Transactional
