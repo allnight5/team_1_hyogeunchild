@@ -31,7 +31,7 @@ public class OrderService {
 
         //그래서 Order를 Craete 할 때, 원하는 가게의 이름 / 주인장 id 라던지 해서 리퀘스를 날리면 우리가 받아서 체크해야 한다.
 
-        List<Order> orders = orderRepository.findAllByUserUsername(user.getUsername());
+        List<Order> orders = orderRepository.findAllByUsername(user.getUsername());
 
         return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
     }
