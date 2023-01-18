@@ -54,16 +54,14 @@ public class AdminService {
         Page<Promote> wait = promoteRepository.findAll(pageable);
 
         //wait를 stream을 이용하여 반복문을 돌리는데 map을 이용해서 하는데.
-        // 나도모름 stream.map검색추천 공부하는데 설명못함 ㅇ.ㅇ
+        //AdminPromoteShowResponseDto::new는 생성자 메서드 참조로
+        //메서드로 구현한다면 아래와같다.
+        //AdminPromoteShowResponseDto DtoResponseDto(int i, String j, String s){
+        //      return new AdminPromoteShowResponseDto(i,j,s);
+        //}
+        //위의 메서드를 (i, j, s) -> new AdminPromoteShowResponseDto(i,j,s)람다로 표현하면 이렇게 되며;
+        //람다를 생서자의 메서드 참조로 바꾸면 AdminPromoteShowResponseDto::new이 되는것이다.
         return wait.stream().map(AdminPromoteShowResponseDto::new).collect(Collectors.toList());
-
-        //저장소내용이다.
-
-        //기준없이 전부다 가져온다.
-//        Page<Promote> findAll(Pageable pageable);
-        //전부다 가져오는것이아닌 내가 보고싶은 내용만 찾아서 가져온다
-        //데이터 낭비가적다.
-//        Page<Promote> findByUsername(String username, int i , Pageable pageable);
     }
 
     //5번 페이징 처리 분리
