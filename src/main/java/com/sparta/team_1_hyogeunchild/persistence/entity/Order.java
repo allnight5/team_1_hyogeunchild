@@ -1,5 +1,6 @@
 package com.sparta.team_1_hyogeunchild.persistence.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,15 +25,13 @@ public class Order {
     @JoinColumn(name = "Product_ID")
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "User_Id")
-    private User user;
 
-    public Order(Long id, Long totalPrice, Long amount, Product product, User user) {
+
+    @Builder
+    public Order(Long id, Long totalPrice, Long amount, Product product) {
         this.id = id;
         this.totalPrice = totalPrice;
         this.amount = amount;
         this.product = product;
-        this.user = user;
     }
 }
