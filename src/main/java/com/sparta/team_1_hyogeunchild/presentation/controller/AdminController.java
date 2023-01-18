@@ -16,13 +16,13 @@ public class AdminController {
     //1.구매자 -> 판매자로 승급
     @PutMapping("/promote")
     public PromoteAdminResponseDto promote(@RequestBody PromoteAdminRequestDto requestDto){
-        return adminService.promoteAuthorization(requestDto);
+        return adminService.promoteBuyer(requestDto.getUsername());
     }
 
     //2. 판매자 자격 박탈->구매자
     @PutMapping("/degrade")
     public PromoteAdminResponseDto degrade(@RequestBody PromoteAdminRequestDto requestDto){
-        return adminService.promoteLossOfAuthority(requestDto);
+        return adminService.degradeSeller(requestDto.getUsername());
     }
 
 //    3. 유저목록조회

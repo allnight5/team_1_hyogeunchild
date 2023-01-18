@@ -1,16 +1,14 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 import com.sparta.team_1_hyogeunchild.business.dto.*;
 import com.sparta.team_1_hyogeunchild.business.service.UserService;
-import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
+import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -67,7 +65,7 @@ public class UserController {
     }
     //5. 판매자 목록조회
     @PostMapping("/sellerlist")
-    public UserResponseDto getAllSellers(@PageableDefault Pageable pageable, User user){
-        userService.getAllSellers();
+    public List<UserResponseDto> getAllSellers(@PageableDefault Pageable pageable, User user){
+        return userService.getAllSellers(pageable.getPageNumber(), user);
     }
 }

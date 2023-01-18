@@ -20,16 +20,16 @@ public class AdminService {
     private final PromoteRepository promoteRepository;
     //1.구매자 -> 판매자로 승급
     @Transactional
-    public PromoteAdminResponseDto promoteAuthorization(PromoteAdminRequestDto requestDto){
+    public PromoteAdminResponseDto promoteBuyer(String username){
         String message = "판매자로의 등급 변환에 성공했습니다.";
-        return getPromoteResponseDto(requestDto, UserRoleEnum.SELLER, message);
+        return getPromoteResponseDto(username, UserRoleEnum.SELLER, message);
     }
     //2. 판매자 자격 박탈->구매자
     //buyerAuthorization or promoteLossOfAuthority
     @Transactional
-    public PromoteAdminResponseDto promoteLossOfAuthority(PromoteAdminRequestDto requestDto){
+    public PromoteAdminResponseDto degradeSeller(String username){
         String message ="구매자로 등급 변환에 성공했습니다.";
-        return getPromoteResponseDto(requestDto, UserRoleEnum.BUYER, message);
+        return getPromoteResponseDto(username, UserRoleEnum.BUYER, message);
     }
     //3. 유저 목록 조회
 
@@ -38,17 +38,16 @@ public class AdminService {
     //5. 등급 업 심사 대기중인 사람들 조회
 
     //6. (4번과 5번 통합)구매자 -> 판매자로 승급, 판매자 자격 박탈->구매자
-    private PromoteAdminResponseDto getPromoteResponseDto(PromoteAdminRequestDto requestDto, UserRoleEnum seller, String message) {
-        String username = requestDto.getUsername();
+    private PromoteAdminResponseDto getPromoteResponseDto(String username, UserRoleEnum seller, String message) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 ()-> new IllegalArgumentException("사용자를 찾을수 없습니다.")
         );
-        Promote promote = promoteRepository.findByUsername(username).orElseThrow(
-                ()-> new IllegalArgumentException("판매자 권한을 신청하는 유저가 아닙니다.")
-        );
-
         if(!user.getRole().equals(UserRoleEnum.ADMIN)){
+
             if(user.getRole().equals(UserRoleEnum.BUYER)){
+                Promote promote = promoteRepository.findByUsername(username).orElseThrow(
+                        ()-> new IllegalArgumentException("판매자 권한을 신청하는 유저가 아닙니다.")
+                );
                 promoteRepository.delete(promote);
                 user.promote(promote.getStoreName(), seller);
                 return new PromoteAdminResponseDto(message);
