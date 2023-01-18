@@ -9,6 +9,10 @@ import com.sparta.team_1_hyogeunchild.persistence.repository.OrderRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,15 +24,29 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+//    @Transactional
+//    public List<OrderResponseDto> getOrders(String username) {
+//        User user = userRepository.findByUsername(username).orElseThrow(
+//                () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
+//        );
+//
+//        List<Order> orders = orderRepository.findAllByStoreName(user.getStoreName());
+//
+//        return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
+//    }
+
+    // 1. 고객 요청 목록 조회
     @Transactional
-    public List<OrderResponseDto> getOrders(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
-        );
+    public List<OrderResponseDto> getOrders(int page, User user){
+        Pageable pageable = pageableSetting(page);
+        Page<Order> orders = orderRepository.findAllByStoreName(user.getStoreName(), pageable);
+        return orders.stream().map(OrderResponseDto::new).collect(Collectors.toList());
+    }
+    public Pageable pageableSetting(int page){
+        Sort.Direction direction = Sort.Direction.ASC;
 
-        List<Order> orders = orderRepository.findAllByStoreName(user.getStoreName());
-
-        return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
+        Sort sort = Sort.by(direction, "id");
+        return PageRequest.of(page-1, 5, sort);
     }
 
     @Transactional

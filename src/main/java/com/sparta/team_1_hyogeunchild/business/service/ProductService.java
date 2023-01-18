@@ -7,11 +7,16 @@ import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,11 +26,11 @@ public class ProductService {
 
     @Transactional
     public List<ProductResponseDto> getProducts(String userName) {
-        User user = userRepository.findByUsername(userName).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
-        );
+//        User user = userRepository.findByUsername(userName).orElseThrow(
+//                () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
+//        );
 
-        List<Product> products = productRepository.findAllByUsername(user.getUsername());
+        List<Product> products = productRepository.findAllByUsername(userName);
 
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
 
@@ -37,17 +42,32 @@ public class ProductService {
         return productResponseDtoList;
     }
 
+    // 1. 내 상품 페이징
     @Transactional
-    public List<ProductResponseDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
-
-        for (Product product : products) {
-            ProductResponseDto productResponseDto = new ProductResponseDto(product);
-            productResponseDtoList.add(productResponseDto);
-        }
-        return productResponseDtoList;
+    public List<ProductResponseDto> getAllProducts(int pageChoice, String username){
+       Page<Product> products = productRepository.findByUsername(pageableProductsSetting(pageChoice), username);
+       return products.stream().map(ProductResponseDto::new).collect(Collectors.toList());
     }
+
+    private Pageable pageableProductsSetting(int pageChoice) {
+        Sort.Direction direction = Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, "id");
+        return PageRequest.of(pageChoice - 1, 10, sort);
+    }
+
+
+
+//    @Transactional
+//    public List<ProductResponseDto> getAllProducts() {
+//        List<Product> products = productRepository.findAll();
+//        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+//
+//        for (Product product : products) {
+//            ProductResponseDto productResponseDto = new ProductResponseDto(product);
+//            productResponseDtoList.add(productResponseDto);
+//        }
+//        return productResponseDtoList;
+//    }
 
     @Transactional
     public String uploadProduct(ProductRequestDto requestDto, String userName) {

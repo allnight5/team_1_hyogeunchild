@@ -67,8 +67,13 @@ public class UserController {
         return "삭제 완료되었습니다.";
     }
     //5. 판매자 목록조회
-    @PostMapping("/sellerlist")
-    public List<UserResponseDto> getAllSellers(@PageableDefault Pageable pageable, User user){
-        return userService.getAllSellers(pageable.getPageNumber(), user);
+    @GetMapping("/sellerlist")
+    public List<UserResponseDto> getAllSellers(@PageableDefault Pageable pageable){
+        return userService.getAllSellers(pageable.getPageNumber());
+    }
+    //6. 판매 상품 목록 조회
+    @GetMapping("/products")
+    public List<ProductResponseDto> getAllSProducts(@PageableDefault Pageable pageable){
+        return userService.getAllProducts(pageable.getPageNumber());
     }
 }

@@ -5,6 +5,8 @@ import com.sparta.team_1_hyogeunchild.business.dto.OrderResponseDto;
 import com.sparta.team_1_hyogeunchild.business.service.OrderService;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +20,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public List<OrderResponseDto> getOrders(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return orderService.getOrders(userDetails.getUsername());
+    public List<OrderResponseDto> getOrders(@PageableDefault Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return orderService.getOrders(pageable.getPageNumber(),userDetails.getUser());
     }
 
     @PostMapping("/{productId}")
