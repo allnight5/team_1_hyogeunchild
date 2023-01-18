@@ -18,6 +18,7 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+
     @Transactional
     public List<ProductResponseDto> getProducts(String userName) {
         User user = userRepository.findByUsername(userName).orElseThrow(
@@ -33,6 +34,18 @@ public class ProductService {
             productResponseDtoList.add(productResponseDto);
         }
 
+        return productResponseDtoList;
+    }
+
+    @Transactional
+    public List<ProductResponseDto> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+
+        for (Product product : products) {
+            ProductResponseDto productResponseDto = new ProductResponseDto(product);
+            productResponseDtoList.add(productResponseDto);
+        }
         return productResponseDtoList;
     }
 
@@ -57,7 +70,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto updateProduct(ProductRequestDto requestDto, String userName, Long id){
+    public ProductResponseDto updateProduct(ProductRequestDto requestDto, String userName, Long id) {
         User user = userRepository.findByUsername(userName).orElseThrow(
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
