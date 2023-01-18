@@ -2,9 +2,12 @@ package com.sparta.team_1_hyogeunchild.business.service;
 
 import com.sparta.team_1_hyogeunchild.business.dto.OrderResponseDto;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Order;
+import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.OrderRepository;
+import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
+import com.sparta.team_1_hyogeunchild.presentation.dto.OrderRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
     @Transactional
     public List<OrderResponseDto> getOrders(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
@@ -30,5 +34,24 @@ public class OrderService {
         List<Order> orders = orderRepository.findAllByUserUsername(user.getUsername());
 
         return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public OrderResponseDto createOrder(OrderRequestDto requestDto) {
+
+        //Product List가 있다. 그걸 조회 할 수 있다.(현재) , 유저는 product를 가지고 있지 않다.
+        Product product = productRepository.findProductByProductName(requestDto.getProductName()).orElseThrow(
+                () -> new IllegalArgumentException("상품이 없습니다.")
+        );
+        // product 에 대해서 주문하면, order를 테이블에 추가해야 한다.
+        Order order = Order.builder()
+                .totalPrice(product.getPrice()* requestDto.getAmount())
+                .product(product)
+                .amount(requestDto.getAmount())
+                .build();
+
+        orderRepository.save(order);
+
+        return OrderResponseDto.from(order);
     }
 }
