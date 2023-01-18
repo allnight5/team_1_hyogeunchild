@@ -96,8 +96,7 @@ public class UserService {
     public List<UserResponseDto> getAllSellers(int pageChoice, User user) {
         if (user.getRole().equals(UserRoleEnum.SELLER)) {
             Page<User> users = userRepository.findByUsername(user.getUsername(), 0, pageableSetting(pageChoice));
-            List<UserResponseDto> userResponseDtoList = users.stream().map(UserResponseDto::new).collect(Collectors.toList());
-            return userResponseDtoList;
+            return users.stream().map(UserResponseDto::new).collect(Collectors.toList());
         }
         throw new SecurityException("판매자가 없습니다.");
     }
