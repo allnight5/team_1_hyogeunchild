@@ -37,21 +37,21 @@ public class AdminService {
     //5. 등급 업 심사 대기중인 사람들 조회
 
     //6. (4번과 5번 통합)구매자 -> 판매자로 승급, 판매자 자격 박탈->구매자
-    private PromoteAdminResponseDto getPromoteResponseDto(String username, UserRoleEnum seller) {
+    private PromoteAdminResponseDto getPromoteResponseDto(String username, UserRoleEnum role) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 ()-> new IllegalArgumentException("사용자를 찾을수 없습니다.")
         );
-        if(!user.getRole().equals(UserRoleEnum.ADMIN)){
+        Promote promote = promoteRepository.findByUsername(username).orElseThrow(
+                ()-> new IllegalArgumentException("판매자 권한을 신청하는 유저가 아닙니다.")
+        );
 
+        if(!user.getRole().equals(UserRoleEnum.ADMIN)){
             if(user.getRole().equals(UserRoleEnum.BUYER)){
-                Promote promote = promoteRepository.findByUsername(username).orElseThrow(
-                        ()-> new IllegalArgumentException("판매자 권한을 신청하는 유저가 아닙니다.")
-                );
                 promoteRepository.delete(promote);
-                user.promote(promote.getStoreName(), seller);
+                user.promote(promote.getStoreName(), role);
                 return new PromoteAdminResponseDto(MessageEnum.PROMOTE_BUYER.getMessage());
             }
-            user.promote(null, seller);
+            user.promote(null, role);
             return new PromoteAdminResponseDto(MessageEnum.DEGRADE_SELLER.getMessage());
         }
         throw new SecurityException("관리자의 권한을 변경할수없습니다..");

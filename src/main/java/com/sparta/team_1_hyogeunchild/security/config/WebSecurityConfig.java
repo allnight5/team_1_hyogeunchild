@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
-@EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
+@EnableGlobalMethodSecurity(prePostEnabled = true) // @Secured 어노테이션 활성화
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
