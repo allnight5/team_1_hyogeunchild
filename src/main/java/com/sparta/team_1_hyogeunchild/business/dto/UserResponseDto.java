@@ -7,12 +7,11 @@ import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 public class UserResponseDto {
     private final String username;
 
-    private final String password;
+    private final String storeName;
 
 
     public UserResponseDto(User user) {
-
         this.username = user.getUsername();
-        this.password = user.getPassword();
+        this.storeName = user.getStoreName();
     }
 }

@@ -91,21 +91,30 @@ public class UserService {
     }
 
     //4. 판매 상품 조회
+    public List<ProductResponseDto> getAllProducts(int pageChoice) {
+        Page<Product> products = productRepository.findAll(pageableProductsSetting(pageChoice));
+        return products.stream().map(ProductResponseDto::new).collect(Collectors.toList());
 
-    //5. 판매자 조회
-    public List<UserResponseDto> getAllSellers(int pageChoice, User user) {
-        if (user.getRole().equals(UserRoleEnum.SELLER)) {
-            Page<User> users = userRepository.findByUsername(user.getUsername(), 0, pageableSetting(pageChoice));
-            return users.stream().map(UserResponseDto::new).collect(Collectors.toList());
-        }
-        throw new SecurityException("판매자가 없습니다.");
     }
 
-    private Pageable pageableSetting(int pageChoice) {
+    private Pageable pageableProductsSetting(int pageChoice) {
+        Sort.Direction direction = Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, "id");
+        return PageRequest.of(pageChoice - 1, 10, sort);
+    }
+
+
+    //5. 판매자 조회
+    public List<UserResponseDto> getAllSellers(int pageChoice) {
+        Page<User> users = userRepository.findByRole(UserRoleEnum.SELLER, pageableSellersSetting(pageChoice));
+        return users.stream().map(UserResponseDto::new).collect(Collectors.toList());
+
+    }
+
+    private Pageable pageableSellersSetting(int pageChoice) {
         Sort.Direction direction = Sort.Direction.ASC;
         Sort sort = Sort.by(direction, "username");
-        Pageable pageable = PageRequest.of(pageChoice - 1, 10, sort);
-        return pageable;
+        return PageRequest.of(pageChoice - 1, 10, sort);
     }
 
 //    public List<ProductResponseDto> getAllSellers(int pageChoice, User user){
@@ -115,16 +124,15 @@ public class UserService {
 //    }
 
 
-
     //6. 판매자 전환 폼 요청
     @Transactional
     public PromoteUserResponseDto promoteUser(PromoteUserRequestDto requestDto, User user) {
-        if (promoteRepository.findByUsername(user.getUsername()).isEmpty()) {
-            Promote promote = new Promote(requestDto, user.getUsername());
-            promoteRepository.save(promote);
-            return new PromoteUserResponseDto(promote);
+        if (promoteRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new SecurityException("이미 판매자 전환 요청을 하였습니다.");
         }
-        throw new SecurityException("이미 판매자 전환 요청을 하였습니다.");
+        Promote promote = new Promote(requestDto, user.getUsername());
+        promoteRepository.save(promote);
+        return new PromoteUserResponseDto(promote);
     }
 
     //6-1. 판매자 폼 취소

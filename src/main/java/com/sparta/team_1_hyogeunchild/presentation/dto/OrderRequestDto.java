@@ -9,6 +9,5 @@ import javax.persistence.Column;
 @NoArgsConstructor
 public class OrderRequestDto {
     // Order 하는 품목, price 곱해서...아니다. < product amount 만 하면 price 는 알아서 계산되게?
-    private String productName;
     private Long amount;
 }
