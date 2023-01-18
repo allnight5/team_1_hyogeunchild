@@ -48,6 +48,7 @@ public class ProductService {
                 .storeName(user.getStoreName())
                 .price(requestDto.getPrice())
                 .amount(requestDto.getAmount())
+                .username(user.getUsername())
                 .build();
 
         productRepository.save(product);

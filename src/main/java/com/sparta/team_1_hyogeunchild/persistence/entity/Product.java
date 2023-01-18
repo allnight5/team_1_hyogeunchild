@@ -29,12 +29,13 @@ public class Product {
     private String storeName;
 
     @Builder
-    public Product(Long id, String productName, Long amount, Long price, String storeName) {
+    public Product(Long id, String productName, Long amount, Long price, String storeName, String username) {
         this.id = id;
         this.productName = productName;
         this.amount = amount;
         this.price = price;
         this.storeName = storeName;
+        this.username = username;
     }
 
     public void update(ProductRequestDto requestDto, User user) {

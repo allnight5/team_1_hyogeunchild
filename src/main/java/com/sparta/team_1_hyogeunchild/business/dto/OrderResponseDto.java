@@ -2,7 +2,11 @@ package com.sparta.team_1_hyogeunchild.business.dto;
 
 import com.sparta.team_1_hyogeunchild.persistence.entity.Order;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class OrderResponseDto {
 
     private Long totalPrice;
