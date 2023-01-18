@@ -2,7 +2,6 @@ package com.sparta.team_1_hyogeunchild.business.dto;
 
 import com.sparta.team_1_hyogeunchild.persistence.entity.Promote;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class AdminPromoteShowResponseDto {

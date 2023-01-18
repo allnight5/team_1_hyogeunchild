@@ -1,7 +1,9 @@
 package com.sparta.team_1_hyogeunchild.business.service;
 
+import com.sparta.team_1_hyogeunchild.business.dto.AdminSellersResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.AdminPromoteResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.AdminPromoteShowResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.AdminBuyersResponseDto;
 import com.sparta.team_1_hyogeunchild.enums.MessageEnum;
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Promote;
@@ -39,9 +41,19 @@ public class AdminService {
         return getPromoteResponseDto(username, UserRoleEnum.BUYER);
     }
     //3. 유저 목록 조회
-
+    @Transactional
+    public List<AdminBuyersResponseDto> getBuyer(int page, int size){
+        Pageable pageable = pageableSetting(page, size);
+        Page<User> user = userRepository.findByRole(UserRoleEnum.BUYER, pageable);
+        return user.stream().map(AdminBuyersResponseDto::new).collect(Collectors.toList());
+    }
     //4. 판매자 목록 조회
-
+    @Transactional
+    public List<AdminSellersResponseDto> getSeller(int page, int size){
+        Pageable pageable = pageableSetting(page, size);
+        Page<User> user = userRepository.findByRole(UserRoleEnum.SELLER, pageable);
+        return user.stream().map(AdminSellersResponseDto::new).collect(Collectors.toList());
+    }
     //5. 등급 업 심사 대기중인 사람들 조회
     //List로 감싸준 이유는 어쨋든 보내주거나하려면 List에 넣어서 보내주기때문에
     //처음부터 감싸서 만든것이다.
@@ -52,7 +64,6 @@ public class AdminService {
         //Page객체안에 promote라는 제네릭스를 넣고 wait라는 변수명으로 생성후
         //모든 파일을 찾아서 가져오는데 위에 pageable에서 정한 기준을 따라서 가져오게 된다.
         Page<Promote> wait = promoteRepository.findAll(pageable);
-
         //wait를 stream을 이용하여 반복문을 돌리는데 map을 이용해서 하는데.
         //AdminPromoteShowResponseDto::new는 생성자 메서드 참조로
         //메서드로 구현한다면 아래와같다.

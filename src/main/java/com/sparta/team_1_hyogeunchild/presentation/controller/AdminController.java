@@ -1,7 +1,9 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 
+import com.sparta.team_1_hyogeunchild.business.dto.AdminSellersResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.AdminPromoteResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.AdminPromoteShowResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.AdminBuyersResponseDto;
 import com.sparta.team_1_hyogeunchild.business.service.AdminService;
 import com.sparta.team_1_hyogeunchild.presentation.dto.AdminPromoteRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +33,15 @@ public class AdminController {
     }
 
 //    3. 유저목록조회
-//    @GetMapping("/buyerList")
-
+    @GetMapping("/buyerList")
+    public List<AdminBuyersResponseDto> getBuyer(@PageableDefault Pageable pageable) {
+        return adminService.getBuyer(pageable.getPageNumber(), pageable.getPageSize());
+    }
 //    4. 판매자 목록조회
-//    @GetMapping("/sellerList")
+    @GetMapping("/sellerList")
+        public List<AdminSellersResponseDto> getSeller(@PageableDefault Pageable pageable){
+        return adminService.getSeller(pageable.getPageNumber(), pageable.getPageSize());
+    }
 
 //    5. 등급 업 심사 대기중인 사람들 조회
 //public List<AdminPromoteShowResponseDto> waitSeller(@RequestParam("page") int page,
