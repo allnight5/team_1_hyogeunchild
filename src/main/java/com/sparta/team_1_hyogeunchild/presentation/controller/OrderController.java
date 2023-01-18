@@ -23,7 +23,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public OrderResponseDto createOrder(@RequestBody OrderRequestDto requestDto) {
-        return orderService.createOrder(requestDto);
+    public OrderResponseDto createOrder(@RequestBody OrderRequestDto requestDto, @PathVariable Long productId) {
+        return orderService.createOrder(requestDto, productId);
     }
 }

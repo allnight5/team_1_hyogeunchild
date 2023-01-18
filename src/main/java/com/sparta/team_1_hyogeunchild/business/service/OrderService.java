@@ -37,12 +37,13 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponseDto createOrder(OrderRequestDto requestDto) {
+    public OrderResponseDto createOrder(OrderRequestDto requestDto, Long productId) {
 
         //Product List가 있다. 그걸 조회 할 수 있다.(현재) , 유저는 product를 가지고 있지 않다.
-        Product product = productRepository.findProductByProductName(requestDto.getProductName()).orElseThrow(
+        Product product = productRepository.findById(productId).orElseThrow(
                 () -> new IllegalArgumentException("상품이 없습니다.")
         );
+
         // product 에 대해서 주문하면, order를 테이블에 추가해야 한다.
         Order order = Order.builder()
                 .totalPrice(product.getPrice()* requestDto.getAmount())
