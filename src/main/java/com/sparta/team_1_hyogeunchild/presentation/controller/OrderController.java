@@ -1,8 +1,10 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 
+import com.sparta.team_1_hyogeunchild.business.dto.OrderMessageResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.OrderRequestDto;
 import com.sparta.team_1_hyogeunchild.business.dto.OrderResponseDto;
 import com.sparta.team_1_hyogeunchild.business.service.OrderService;
+import com.sparta.team_1_hyogeunchild.presentation.dto.OrderAvailableRequestDto;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -29,4 +31,11 @@ public class OrderController {
     public OrderResponseDto createOrder(@RequestBody OrderRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long productId){
         return orderService.createOrder(requestDto, userDetails.getUsername(), productId);
     }
+
+    @PutMapping("/available")
+    @PreAuthorize("hasRole('SELLER')")
+    public OrderMessageResponseDto availableOrder(@RequestBody OrderAvailableRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return orderService.availableOrder(requestDto, userDetails.getUsername());
+    }
+
 }

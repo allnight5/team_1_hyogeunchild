@@ -32,13 +32,21 @@ public class Order {
     @JoinColumn
     private String storeName;
 
+    @Column(nullable = false)
+    private int available;
+
     @Builder
-    public Order(Long id, Long totalPrice, Long amount, Product product, User user, String storeName) {
+    public Order(Long id, Long totalPrice, Long amount, Product product, User user, String storeName, int available) {
         this.id = id;
         this.totalPrice = totalPrice;
         this.amount = amount;
         this.product = product;
         this.user = user;
         this.storeName = storeName;
+        this.available = available;
+    }
+
+    public void orderAvailable(int available){
+        this.available = available;
     }
 }

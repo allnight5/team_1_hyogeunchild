@@ -1,5 +1,6 @@
 package com.sparta.team_1_hyogeunchild.business.service;
 
+import com.sparta.team_1_hyogeunchild.business.dto.OrderMessageResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.OrderRequestDto;
 import com.sparta.team_1_hyogeunchild.business.dto.OrderResponseDto;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Order;
@@ -8,6 +9,7 @@ import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.OrderRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
+import com.sparta.team_1_hyogeunchild.presentation.dto.OrderAvailableRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +51,7 @@ public class OrderService {
         return PageRequest.of(page-1, 5, sort);
     }
 
+    // 2. buyer 가 seller 에게 order 넣기
     @Transactional
     public OrderResponseDto createOrder(OrderRequestDto requestDto, String username, Long productId) {
         User user = userRepository.findByUsername(username).orElseThrow(
@@ -65,9 +68,25 @@ public class OrderService {
                 .product(product)
                 .user(user)
                 .storeName(product.getStoreName())
+                .available(0)
                 .build();
 
         orderRepository.save(order);
         return OrderResponseDto.from(order);
+    }
+
+    // 3. 고객 요청 처리응답
+    @Transactional
+    public OrderMessageResponseDto availableOrder(OrderAvailableRequestDto requestDto, String username){
+        Order order = orderRepository.findByUserUsernameAndId(username, requestDto.getId());
+        int available = requestDto.getAvailable();
+        order.orderAvailable(available);
+        if(available == 1){
+            return new OrderMessageResponseDto("정상적으로 주문이 완료되었습니다.");
+        }else if(available == 2){
+            return new OrderMessageResponseDto("주문을 취소하였습니다.");
+        }else{
+            return new OrderMessageResponseDto("주문을 확인 할 수 없습니다.");
+        }
     }
 }
