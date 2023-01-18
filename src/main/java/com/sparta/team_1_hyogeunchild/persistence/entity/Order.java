@@ -24,15 +24,21 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "Product_ID")
     private Product product;
-    @Column(nullable = false)
-    private String username;
+
+    @ManyToOne
+    @JoinColumn(name = "User_Id")
+    private User user;
+
+    @JoinColumn
+    private String storeName;
 
     @Builder
-    public Order(Long id, Long totalPrice, Long amount, Product product, String username) {
+    public Order(Long id, Long totalPrice, Long amount, Product product, User user, String storeName) {
         this.id = id;
         this.totalPrice = totalPrice;
         this.amount = amount;
         this.product = product;
-        this.username = username;
+        this.user = user;
+        this.storeName = storeName;
     }
 }
