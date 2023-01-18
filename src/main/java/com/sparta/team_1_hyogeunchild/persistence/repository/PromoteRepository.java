@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface PromoteRepository extends JpaRepository<Promote, Long> {
 
     Optional<Promote> findByUsername(String username);
-    Optional<Promote> deleteByUsername(String username);
+    void deleteByUsername(String username);
 
     //기준없이 전부다 가져온다.
     Page<Promote> findAll(Pageable pageable);
-    Page<Promote> findByUsername(String username, int i , Pageable pageable);
+
 }

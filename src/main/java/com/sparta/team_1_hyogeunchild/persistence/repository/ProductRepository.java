@@ -1,8 +1,6 @@
 package com.sparta.team_1_hyogeunchild.persistence.repository;
 
 import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,20 +8,11 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findAllByUsersUsername(String userName);
-
-    Optional<Product> findByIdAndUsersId(Long id, Long userId);
-    Page<Product> findAllByUsersId(int id, int page, Pageable pageable);
-    Page<Product> findAllByUsersUsername(String username, int i, Pageable pageable);
-
+    List<Product> findAllByUsername(String userName);
+    Optional<Product> findByIdAndUsername(Long id, String username);
     void deleteById(Long id);
-    Optional<Product> findByUsersId(Long userId);
 
-//    List<Product> findAllByUserId(Long userId);
 
-    // 전체 상품 목록 조회 매서드
-    // 유저 신청이-> 뭐뭐 사겠다.
-    // 바로 내용이 바뀐다.
 
 
     // 유저 상품 주세요~

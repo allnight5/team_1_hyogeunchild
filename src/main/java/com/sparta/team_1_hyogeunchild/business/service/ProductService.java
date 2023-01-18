@@ -24,12 +24,12 @@ public class ProductService {
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
 
-        List<Product> products = productRepository.findAllByUsersUsername(user.getUsername());
+        List<Product> products = productRepository.findAllByUsername(user.getUsername());
 
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
 
         for (Product product : products) {
-            ProductResponseDto productResponseDto = new ProductResponseDto(product,user);
+            ProductResponseDto productResponseDto = new ProductResponseDto(product);
             productResponseDtoList.add(productResponseDto);
         }
 
@@ -43,7 +43,14 @@ public class ProductService {
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
 
-        Product product = productRepository.save(new Product(requestDto, user));
+        Product product = Product.builder()
+                .productName(requestDto.getProductName())
+                .storeName(user.getStoreName())
+                .price(requestDto.getPrice())
+                .amount(requestDto.getAmount())
+                .build();
+
+        productRepository.save(product);
 
         return "등록 완료";
     }
@@ -54,13 +61,13 @@ public class ProductService {
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
 
-        Product product = productRepository.findByIdAndUsersId(id, user.getId()).orElseThrow(
+        Product product = productRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
         );
 
         product.update(requestDto, user);
 
-        return new ProductResponseDto(product, user);
+        return new ProductResponseDto(product);
     }
 
     @Transactional
@@ -69,7 +76,7 @@ public class ProductService {
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
 
-        Product product = productRepository.findByIdAndUsersId(id, user.getId()).orElseThrow(
+        Product product = productRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
         );
         productRepository.deleteById(product.getId());
