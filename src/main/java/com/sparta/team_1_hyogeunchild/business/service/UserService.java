@@ -75,6 +75,7 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new SecurityException("사용자를 찾을수 없습니다.");
         }
+
         return new LoginResponseDto(jwtUtil.createToken(user.getUsername(), user.getRole()));
     }
 
@@ -133,7 +134,7 @@ public class UserService {
         if (promoteRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new SecurityException("이미 판매자 전환 요청을 하였습니다.");
         }
-        Promote promote = new Promote(requestDto, user.getUsername());
+        Promote promote = new Promote(requestDto, user);
         promoteRepository.save(promote);
         return new PromoteUserResponseDto(promote);
     }
@@ -149,7 +150,7 @@ public class UserService {
         Promote promote = promoteRepository.findByUsername(user1.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("판매자 요청을 하지 않았습니다.")
         );
-        promoteRepository.deleteByUsername(promote.getUsername());
+        promoteRepository.deleteByUsername(promote.getUser().getUsername());
 //        if(promoteRepository.findByUsername(user.getUsername()).isPresent()){
 //            Promote promote = promoteRepository.deleteByStoreName(user.getStoreName()).orElseThrow(
 //                    () -> new IllegalArgumentException("")
@@ -174,5 +175,15 @@ public class UserService {
         userRepository.save(user);
         return "생성이 완료되었습니다.";
     }
-}
 
+
+    //8. 등급 업 심사 대기중인 사람들 조회
+
+
+//    //9.유저이름으로 DB 조회기능
+//    private User getUser(Optional<User> userRepository) {
+//        return userRepository.orElseThrow(
+//                () -> new IllegalArgumentException("사용자를 찾을수 없습니다.")
+//        );
+//    }
+}

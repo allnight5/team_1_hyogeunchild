@@ -10,7 +10,7 @@ public class AdminPromoteShowResponseDto {
     private final String storeName;
     public AdminPromoteShowResponseDto(Promote promote){
         this.id = promote.getId();
-        this.username = promote.getUsername();
+        this.username = promote.getUser().getUsername();
         this.storeName = promote.getStoreName();
     }
 }

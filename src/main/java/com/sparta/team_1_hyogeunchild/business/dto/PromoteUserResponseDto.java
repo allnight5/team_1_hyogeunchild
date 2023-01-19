@@ -12,7 +12,7 @@ public class PromoteUserResponseDto {
     private String storeName;
 
     public PromoteUserResponseDto(Promote promote){
-        this.username = promote.getUsername();
+        this.username = promote.getUser().getUsername();
         this.password = promote.getPassword();
         this.storeName = promote.getStoreName();
     }

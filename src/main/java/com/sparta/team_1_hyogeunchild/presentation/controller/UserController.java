@@ -91,5 +91,9 @@ public class UserController {
 
     //8.유저 프로필 이미지 변경
 
+    //@GetMapping("/admin/sellerlist")
+    //7. 판매자 목록조회
 
+    // @GetMapping("/admin/registerseller")
+    //8. 등급 업 심사 대기중인 사람들 조회
 }

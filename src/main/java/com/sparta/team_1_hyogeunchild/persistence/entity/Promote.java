@@ -17,14 +17,15 @@ public class Promote extends Timestaped {
 
     @Column(nullable = false)
     private String storeName;
-    @Column(nullable = false, unique = true)
-    private String username;
     @Column(nullable = false)
     private String password;
+    @ManyToOne
+    private User user;
+    private String comment;
 
-    public Promote(PromoteUserRequestDto requestDto, String username){
+    public Promote(PromoteUserRequestDto requestDto, User user){
         this.storeName = requestDto.getStoreName();
-        this.username = username;
+        this.user = user;
         this.password = requestDto.getPassword();
 
     }

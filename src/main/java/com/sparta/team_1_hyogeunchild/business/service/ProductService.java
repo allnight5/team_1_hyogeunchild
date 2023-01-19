@@ -3,8 +3,10 @@ package com.sparta.team_1_hyogeunchild.business.service;
 import com.sparta.team_1_hyogeunchild.business.dto.ProductRequestDto;
 import com.sparta.team_1_hyogeunchild.business.dto.ProductResponseDto;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
+import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
+import com.sparta.team_1_hyogeunchild.persistence.repository.SellerRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final SellerRepository sellerRepository;
 
     @Transactional
     public List<ProductResponseDto> getProducts(String userName) {
@@ -72,16 +75,16 @@ public class ProductService {
     @Transactional
     public String uploadProduct(ProductRequestDto requestDto, String userName) {
 
-        User user = userRepository.findByUsername(userName).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
+        Seller seller = sellerRepository.findByUsername(userName).orElseThrow(
+                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
         );
 
         Product product = Product.builder()
                 .productName(requestDto.getProductName())
-                .storeName(user.getStoreName())
+                .storeName(seller.getStoreName())
                 .price(requestDto.getPrice())
                 .amount(requestDto.getAmount())
-                .username(user.getUsername())
+                .username(seller.getUsername())
                 .build();
 
         productRepository.save(product);
@@ -91,15 +94,16 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDto updateProduct(ProductRequestDto requestDto, String userName, Long id) {
-        User user = userRepository.findByUsername(userName).orElseThrow(
+        Seller seller = sellerRepository.findByUsername(userName).orElseThrow(
                 () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
         );
 
-        Product product = productRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
+        Product product = productRepository.findByIdAndUsername(id, seller.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
         );
+        sellersellerseller
 
-        product.update(requestDto, user);
+        product.update(requestDto, seller);
 
         return new ProductResponseDto(product);
     }

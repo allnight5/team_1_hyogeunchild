@@ -41,6 +41,6 @@ public class Product extends Timestaped {
         this.productName = requestDto.getProductName();
         this.amount = requestDto.getAmount();
         this.price = requestDto.getPrice();
-        this.storeName = user.getStoreName();
+        this.storeName = user.seller();
     }
 }

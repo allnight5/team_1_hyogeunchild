@@ -1,14 +1,13 @@
 package com.sparta.team_1_hyogeunchild.business.service;
 
-import com.sparta.team_1_hyogeunchild.business.dto.AdminSellersResponseDto;
-import com.sparta.team_1_hyogeunchild.business.dto.AdminPromoteResponseDto;
-import com.sparta.team_1_hyogeunchild.business.dto.AdminPromoteShowResponseDto;
-import com.sparta.team_1_hyogeunchild.business.dto.AdminBuyersResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.*;
 import com.sparta.team_1_hyogeunchild.enums.MessageEnum;
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Promote;
+import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.PromoteRepository;
+import com.sparta.team_1_hyogeunchild.persistence.repository.SellerRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +28,62 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final PromoteRepository promoteRepository;
+    private final SellerRepository sellerRepository;
+    //0. 유저 승급 체커
+
+    @Transactional
+    public List<PromoteUserResponseDto> getPromoteList(int page, int size) {
+        Pageable pageable = pageableSetting(page, size);
+        Page<Promote> promotes = promoteRepository.findAll(pageable);
+        return promotes.stream().map(PromoteUserResponseDto::new).collect(Collectors.toList());
+        // 어드민이 모든 promote 들을 조회하는 매서드입니다.
+    }
+
     //1.구매자 -> 판매자로 승급
     @Transactional
-    public AdminPromoteResponseDto promoteBuyer(String username){
-        return getPromoteResponseDto(username, UserRoleEnum.SELLER);
+    public AdminPromoteResponseDto promoteBuyer(Long promoteId){
+        Promote promote = promoteRepository.findById(promoteId).orElseThrow(
+                () -> new IllegalArgumentException("잘못된 승급신청 번호입니다.")
+        );
+        // Buyer 만 승급신청을 할 수 있으므로, User/Promote 객체의 체커로직은 불필요합니다.
+
+            Seller seller = Seller.builder()
+                    .storeName(promote.getStoreName())
+                    .comment(promote.getComment())
+                    .password(promote.getUser().getPassword())
+                    .role(UserRoleEnum.SELLER)
+                    .username(promote.getUser().getUsername())
+                    .build();
+        // 수정이 힘들다 / USER-> SELLER 가려면 SELLER 새 인스턴스 생성해야한다. <
+        // 상속 쓰는 이유가 USER 안에 불필요한 Null값 필드를 사용하지 않으려고
+        // 근데 어차피 저희 명세 중에 승급신청 인원들의 리스트를 조회하는 게 있었죠
+        // 그래서 promote 라는 테이블을 만들고, 유저의 정보를 저장했습니다.
+        // 그 promote 테이블에서 유저의 정보를 가지고, seller를 만듬과 동시에 user 테이블에 Buyer로 존재했던 유저를 삭제합니다.
+
+            sellerRepository.save(seller);
+            userRepository.deleteByUsername(promote.getUser().getUsername());
+        return new AdminPromoteResponseDto("판매자로 승급 신청이 승인되었습니다.");
     }
     //2. 판매자 자격 박탈->구매자
     //buyerAuthorization or promoteLossOfAuthority
     @Transactional
-    public AdminPromoteResponseDto degradeSeller(String username){
-        return getPromoteResponseDto(username, UserRoleEnum.BUYER);
+    public AdminPromoteResponseDto degradeSeller(Long promoteId){
+        Promote promote = promoteRepository.findById(promoteId).orElseThrow(
+                () -> new IllegalArgumentException("잘못된 승급신청 번호입니다.")
+        );
+        // Buyer 만 승급신청을 할 수 있으므로, User/Promote 객체의 체커로직은 불필요합니다.
+
+        Seller seller = Seller.builder()
+                .storeName(promote.getStoreName())
+                .comment(promote.getComment())
+                .password(promote.getUser().getPassword())
+                .role(promote.getUser().getRole())
+                .username(promote.getUser().getUsername())
+                .build();
+
+        sellerRepository.save(seller);
+        userRepository.deleteByUsername(promote.getUser().getUsername());
+        return new AdminPromoteResponseDto("판매자로 승급 신청이 승인되었습니다.");
     }
     //3. 유저 목록 조회
     @Transactional
@@ -98,23 +143,5 @@ public class AdminService {
 
 
     //6. (4번과 5번 통합)구매자 -> 판매자로 승급, 판매자 자격 박탈->구매자
-    private AdminPromoteResponseDto getPromoteResponseDto(String username, UserRoleEnum role) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                ()-> new IllegalArgumentException("사용자를 찾을수 없습니다.")
-        );
-        Promote promote = promoteRepository.findByUsername(username).orElseThrow(
-                ()-> new IllegalArgumentException("판매자 권한을 신청하는 유저가 아닙니다.")
-        );
 
-        if(!user.getRole().equals(UserRoleEnum.ADMIN)){
-            if(user.getRole().equals(UserRoleEnum.BUYER)){
-                promoteRepository.delete(promote);
-                user.promote(promote.getStoreName(), role);
-                return new AdminPromoteResponseDto(MessageEnum.PROMOTE_BUYER.getMessage());
-            }
-            user.promote(null, role);
-            return new AdminPromoteResponseDto(MessageEnum.DEGRADE_SELLER.getMessage());
-        }
-        throw new SecurityException("관리자의 권한을 변경할수없습니다..");
-    }
 }
