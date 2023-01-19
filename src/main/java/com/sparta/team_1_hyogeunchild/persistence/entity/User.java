@@ -1,13 +1,16 @@
 package com.sparta.team_1_hyogeunchild.persistence.entity;
 
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn
 @Entity(name = "users")
 public class User extends Timestaped {
     @Id

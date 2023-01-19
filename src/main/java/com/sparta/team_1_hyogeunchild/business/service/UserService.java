@@ -4,6 +4,7 @@ import com.sparta.team_1_hyogeunchild.business.dto.*;
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Promote;
+import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.PromoteRepository;
@@ -136,6 +137,7 @@ public class UserService {
         promoteRepository.save(promote);
         return new PromoteUserResponseDto(promote);
     }
+
 
     //6-1. 판매자 폼 취소
     @Transactional

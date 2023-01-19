@@ -96,6 +96,7 @@ public class AdminService {
         return PageRequest.of(page-1, size, sort);
     }
 
+
     //6. (4번과 5번 통합)구매자 -> 판매자로 승급, 판매자 자격 박탈->구매자
     private AdminPromoteResponseDto getPromoteResponseDto(String username, UserRoleEnum role) {
         User user = userRepository.findByUsername(username).orElseThrow(

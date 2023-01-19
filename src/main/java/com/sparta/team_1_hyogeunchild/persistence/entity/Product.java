@@ -21,13 +21,11 @@ public class Product extends Timestaped {
     // 상품 양(남은 개수)
     @Column(nullable = false)
     private Long price;
-
     @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String storeName;
-
 
     @Builder
     public Product(Long id, String productName, Long amount, Long price, String storeName, String username) {

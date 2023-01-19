@@ -1,0 +1,37 @@
+package com.sparta.team_1_hyogeunchild.persistence.entity;
+
+import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
+import lombok.*;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue(value = "Seller")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+public class Seller extends User {
+
+    private String storeName;
+    private String category;
+    private String comment;
+
+    // 문제? -> Seller 인스턴스가 +1 되는거에요. USER1 -> SELLER / USER2 이자 Seller < / Buyer로도 주고 Seller 로도 주면 로그인 부분이 좀 문제가 있을 수가 있다.<
+    // 우리의 로직은 대부분 UserName < 더 문제의 여지가 있다. < unique 를 풀면 < Seller 새 회원이름 다오 하면 노상관.
+    // Buyer <기본. -> Seller 로 등업이 되면, Buyer였던 이 사람의 유저아이디를 삭제하고 Seller로만 남길건지?
+    // 새 객체 만드는거 문제 없다. 근데 userName이 중복이다. < ID는 다름
+
+    @Builder
+    public Seller(String username, String password, UserRoleEnum role, String storeName, String comment) {
+        super(username, password, role);
+        this.storeName = storeName;
+        this.comment = comment;
+    }
+
+    public void update(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public void addCategory(String category){this.category = this.category+", "+category;}
+}
