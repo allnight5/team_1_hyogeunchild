@@ -6,8 +6,16 @@ import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.hibernate.result.Output;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +102,35 @@ public class UserController {
     }
 
     //8.유저 프로필 이미지 변경
+
+    //9.유저 프로필 이미지 불러오기
+    @GetMapping(value = "image/{imagename}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<Integer> userSearch(@PathVariable("imagename") String imagename) throws IOException {
+        InputStream imageStream = new FileInputStream("C:/Users/mind/sparta_java/team_1_hyogeunchild/src/main/resources/static/image/" + imagename);
+        byte[] bytes = {110, 101, 120, 116, 115, 116, 101, 112};
+        OutputStream outputStream = new ByteArrayOutputStream(bytes.length);
+        int imageByteArray = IOUtils.copy(imageStream, outputStream);
+        imageStream.close();
+        return new ResponseEntity<>(imageByteArray, HttpStatus.OK);
+    }
+//    @GetMapping("/profile/{fileName}")
+//    public ResponseEntity<Resource> getProfile(@PathVariable("fileName") String fileName) throws FileNotFoundException {
+//        try{
+//            String path = "/Users/mind/sparta_java/team_1_hyogeunchild/src/main/resources/static/image/";
+//            FileSystemResource resource = new FileSystemResource(path+fileName);
+//            if (!resource.exists()) {
+//                throw new FileNotFoundException();
+//            }
+//            HttpHeaders header = new HttpHeaders();
+//            Path filePath = null;
+//            filePath = Paths.get(path+fileName);
+//            header.add("Content-Type", Files.probeContentType(filePath));
+//            return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+//        }catch (Exception e) {
+//            throw new FileNotFoundException();
+//        }
+//
+//    }
 
 
 }
