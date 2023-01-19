@@ -1,7 +1,6 @@
 package com.sparta.team_1_hyogeunchild.business.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +14,7 @@ public class FileService {
 
 //    @Value("${upload.image.location}")
 //    private String location;
-    private String location = "../../../../../../../../sparta_java/team_1_hyogeunchild/src/main/resources/static/image/";
+    private String location = "C:/Users/mind/sparta_java/team_1_hyogeunchild/src/main/resources/static/image/";
     @PostConstruct
     void postConstruct(){
         File dir = new File(location);
