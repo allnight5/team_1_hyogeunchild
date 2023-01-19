@@ -8,10 +8,7 @@ import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.PromoteRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
-import com.sparta.team_1_hyogeunchild.presentation.dto.LoginRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteUserRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.SignUpRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.UserDeleteRequestDto;
+import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +19,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +37,8 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final ProductRepository productRepository;
+
+    private final FileService fileService;
 
     //1.회원가입
     @Transactional
@@ -157,6 +159,18 @@ public class UserService {
 //                    () -> new IllegalArgumentException("판매자 요청 폼을 작성하지 않았습니다.")
 //            );
 //        }
+    }
+    //7. 유저 프로필 생성
+    @Transactional
+    public String createProfile(MultipartFile file, ProfileRequestDto requestDto, User user){
+        String saveImageName = user.getUsername() + file.getOriginalFilename();
+//        String uuid = UUID.randomUUID().toString();
+//        String unique = uuid.substring(0, 7);
+//        String filename = unique+ "_" + multipartFile.getOriginalFilename();
+        user.changeProfile(requestDto.getNickName(), saveImageName);
+        fileService.upload(file, saveImageName);
+        userRepository.save(user);
+        return "생성이 완료되었습니다.";
     }
 }
 

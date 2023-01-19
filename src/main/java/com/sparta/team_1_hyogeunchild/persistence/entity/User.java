@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity(name = "users")
-public class User {
+public class User extends Timestaped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_ID")
@@ -20,7 +20,10 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
+    @Column
+    private String image;
+    @Column
+    private String nickName;
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
@@ -35,5 +38,9 @@ public class User {
     public void promote(String storeName, UserRoleEnum role) {
         this.storeName = storeName;
         this.role = role;
+    }
+    public void changeProfile(String nickName, String image){
+        this.nickName = nickName;
+        this.image =image;
     }
 }

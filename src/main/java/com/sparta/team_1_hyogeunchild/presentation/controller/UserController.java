@@ -11,10 +11,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 //메서드 혹은 클래스 단위로 Mapping을 주어 중복 URL을 공통으로 처리할 수 있다
@@ -76,4 +78,18 @@ public class UserController {
     public List<ProductResponseDto> getAllSProducts(@PageableDefault Pageable pageable){
         return userService.getAllProducts(pageable.getPageNumber());
     }
+    //7.유저 프로필 이미지 추가
+    @PostMapping("/profile")
+    public String createProfile(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("nickName") ProfileRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+
+        return userService.createProfile(file, requestDto, userDetails.getUser());
+    }
+
+    //8.유저 프로필 이미지 변경
+
+
 }
