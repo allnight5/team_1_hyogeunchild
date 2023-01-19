@@ -35,7 +35,7 @@ public class OrderController {
     @PutMapping("/available")
     @PreAuthorize("hasRole('SELLER')")
     public OrderMessageResponseDto availableOrder(@RequestBody OrderAvailableRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return orderService.availableOrder(requestDto, userDetails.getUsername());
+        return orderService.availableOrder(requestDto, userDetails.getUser().getStoreName());
     }
 
 }

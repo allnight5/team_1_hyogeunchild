@@ -28,6 +28,7 @@ public class Product {
     @Column(nullable = false)
     private String storeName;
 
+
     @Builder
     public Product(Long id, String productName, Long amount, Long price, String storeName, String username) {
         this.id = id;

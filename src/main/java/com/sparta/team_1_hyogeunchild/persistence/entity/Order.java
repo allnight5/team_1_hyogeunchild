@@ -33,10 +33,10 @@ public class Order {
     private String storeName;
 
     @Column(nullable = false)
-    private int available;
+    private Long available;
 
     @Builder
-    public Order(Long id, Long totalPrice, Long amount, Product product, User user, String storeName, int available) {
+    public Order(Long id, Long totalPrice, Long amount, Product product, User user, String storeName, Long available) {
         this.id = id;
         this.totalPrice = totalPrice;
         this.amount = amount;
@@ -46,7 +46,7 @@ public class Order {
         this.available = available;
     }
 
-    public void orderAvailable(int available){
+    public void orderAvailable(Long available){
         this.available = available;
     }
 }

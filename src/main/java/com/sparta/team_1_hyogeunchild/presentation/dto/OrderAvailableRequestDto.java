@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class OrderAvailableRequestDto {
     private Long id;
-    private int available;
+    private Long available;
 }

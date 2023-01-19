@@ -86,7 +86,6 @@ public class AdminService {
         // 만약 최초 생성일 마지막 생성일로 바꾸고 싶다면 생성실"createdDate" 수정일"modifiedDate"로 넣어주면된다.
 
         Sort sort = Sort.by(direction, "id");
-
         //이제 Pageable객체 형태로 돌려주게 되는데
         //파라미터값을 처음부터 말하면
         //들어온 가고싶은 페이지번호(page-1) 어째서 -1을 넣어주느냐? default가 0이라서 1이라는 페이지를 가고싶다면

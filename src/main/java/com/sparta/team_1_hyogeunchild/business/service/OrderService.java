@@ -68,7 +68,7 @@ public class OrderService {
                 .product(product)
                 .user(user)
                 .storeName(product.getStoreName())
-                .available(0)
+                .available(requestDto.getAvailable())
                 .build();
 
         orderRepository.save(order);
@@ -77,9 +77,15 @@ public class OrderService {
 
     // 3. 고객 요청 처리응답
     @Transactional
-    public OrderMessageResponseDto availableOrder(OrderAvailableRequestDto requestDto, String username){
-        Order order = orderRepository.findByUserUsernameAndId(username, requestDto.getId());
-        int available = requestDto.getAvailable();
+    public OrderMessageResponseDto availableOrder(OrderAvailableRequestDto requestDto, String storeName){
+//        Order order = orderRepository.findByUserUsernameAndId(username, requestDto.getId());
+//        Order order = orderRepository.findById(requestDto.getId()).orElseThrow(
+//                ()-> new IllegalArgumentException("주문번호가 존재하지 않습니다.")
+//        );
+        Order order = orderRepository.findByIdAndStoreName(requestDto.getId(), storeName).orElseThrow(
+                ()-> new IllegalArgumentException("주문번호가 존재하지 않습니다.")
+        );
+        Long available = requestDto.getAvailable();
         order.orderAvailable(available);
         if(available == 1){
             return new OrderMessageResponseDto("정상적으로 주문이 완료되었습니다.");
