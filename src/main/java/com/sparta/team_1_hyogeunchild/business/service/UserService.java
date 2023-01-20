@@ -22,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,7 +37,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
-
     private final FileService fileService;
 
     //1.회원가입
@@ -98,7 +96,6 @@ public class UserService {
     public List<ProductResponseDto> getAllProducts(int pageChoice) {
         Page<Product> products = productRepository.findAll(pageableProductsSetting(pageChoice));
         return products.stream().map(ProductResponseDto::new).collect(Collectors.toList());
-
     }
 
     private Pageable pageableProductsSetting(int pageChoice) {

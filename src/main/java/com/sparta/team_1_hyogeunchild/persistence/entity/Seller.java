@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -14,9 +15,10 @@ import javax.persistence.Entity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Seller extends User {
-
+    @Column(nullable = false)
     private String storeName;
     private String category;
+    @Column(nullable = false)
     private String introduce;
 
     // 문제? -> Seller 인스턴스가 +1 되는거에요. USER1 -> SELLER / USER2 이자 Seller < / Buyer로도 주고 Seller 로도 주면 로그인 부분이 좀 문제가 있을 수가 있다.<

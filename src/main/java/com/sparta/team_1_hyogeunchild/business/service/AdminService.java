@@ -45,24 +45,16 @@ public class AdminService {
         Promote promote = promoteRepository.findById(promoteId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 승급신청 번호입니다.")
         );
-        // Buyer 만 승급신청을 할 수 있으므로, User/Promote 객체의 체커로직은 불필요합니다.
-
             Seller seller = Seller.builder()
                     .storeName(promote.getStoreName())
                     .introduce(promote.getIntroduce())
                     .category(promote.getCategory())
                     .password(promote.getUser().getPassword())
                     .role(UserRoleEnum.SELLER)
-                    .username(promote.getUser().getUsername())
+                    .username(promote.getNewName())
                     .build();
-        // 수정이 힘들다 / USER-> SELLER 가려면 SELLER 새 인스턴스 생성해야한다. <
-        // 상속 쓰는 이유가 USER 안에 불필요한 Null값 필드를 사용하지 않으려고
-        // 근데 어차피 저희 명세 중에 승급신청 인원들의 리스트를 조회하는 게 있었죠
-        // 그래서 promote 라는 테이블을 만들고, 유저의 정보를 저장했습니다.
-        // 그 promote 테이블에서 유저의 정보를 가지고, seller를 만듬과 동시에 user 테이블에 Buyer로 존재했던 유저를 삭제합니다.
 
             sellerRepository.save(seller);
-            userRepository.deleteByUsername(promote.getUser().getUsername());
         return new AdminPromoteResponseDto("판매자로 승급 신청이 승인되었습니다.");
     }
     //2. 판매자 자격 박탈->구매자

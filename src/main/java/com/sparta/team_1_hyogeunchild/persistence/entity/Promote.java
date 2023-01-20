@@ -21,16 +21,17 @@ public class Promote extends Timestaped {
     private String password;
     @ManyToOne
     private User user;
+    private String newName;
     private String introduce;
     private String category;
-
+    // 바이어가 이미 주문한 오더는, 바이어로써 확인 가능하고
+    // 셀러 승급하면 다른 아이디임. 다른 유저임 < 한 유저가 아이디 두개 가지는거임.
     public Promote(PromoteUserRequestDto requestDto, User user){
         this.storeName = requestDto.getStoreName();
         this.user = user;
         this.password = requestDto.getPassword();
         this.category = requestDto.getCategory();
         this.introduce = requestDto.getIntroduce();
+        this.newName = requestDto.getNewName();
     }
-
-
 }
