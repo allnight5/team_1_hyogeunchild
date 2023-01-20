@@ -42,12 +42,6 @@ public class SellerService {
 
         //localhost:8080/seller/profile
         List<Category> categoryList = categoryRepository.findAllByNickName(user.getNickName());
-        return new SellerProfileResponseDto(
-                seller.getNickName(),
-                seller.getStoreName(),
-                seller.getImage(),
-                seller.getIntroduce(),
-                categoryList
-        );
+        return new SellerProfileResponseDto(seller);
     }
 }
