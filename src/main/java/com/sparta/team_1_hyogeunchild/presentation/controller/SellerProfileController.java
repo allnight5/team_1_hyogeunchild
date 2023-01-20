@@ -28,4 +28,9 @@ public class SellerProfileController {
     private SellerProfileResponseDto getProfileSeller(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id){
         return sellerService.getProfileSeller(userDetails.getUser(), id);
     }
+    //카테고리 삭제
+    @DeleteMapping("/{id}/delete{id}")
+    public String deleteCategory(@PathVariable Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
+    return sellerService.deleteCategory(id,userDetails.getUser());
+    }
 }

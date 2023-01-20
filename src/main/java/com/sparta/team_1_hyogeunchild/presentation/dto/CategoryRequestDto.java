@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class CategoryRequestDto {
-    List<String> category;
+    private String category;
 }

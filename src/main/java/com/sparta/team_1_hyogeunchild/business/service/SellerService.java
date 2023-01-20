@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.sparta.team_1_hyogeunchild.enums.MessageEnum.UPDATE_CATEGORY_SUCCESS;
 
 @Service
@@ -43,5 +44,14 @@ public class SellerService {
         //localhost:8080/seller/profile
         List<Category> categoryList = categoryRepository.findAllByNickName(user.getNickName());
         return new SellerProfileResponseDto(seller);
+    }
+    //카테고리 삭제
+    @Transactional
+    public String deleteCategory(Long id, User user){
+        Category category = categoryRepository.findByIdAndSellerUsername(id,user.getUsername()).orElseThrow(
+                ()-> new IllegalArgumentException("카테고리가 존재하지 않습니다.")
+        );
+        categoryRepository.deleteById(category.getId());
+        return "삭제 되었습니다.";
     }
 }
