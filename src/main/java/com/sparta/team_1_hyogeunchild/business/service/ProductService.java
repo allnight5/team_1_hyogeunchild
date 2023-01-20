@@ -27,7 +27,7 @@ public class ProductService {
     private final UserRepository userRepository;
     private final SellerRepository sellerRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getProducts(String userName) {
         List<Product> products = productRepository.findAllByUsername(userName);
 
@@ -42,7 +42,7 @@ public class ProductService {
     }
 
     // 1. 내 상품 페이징
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProducts(int pageChoice, String username){
        Page<Product> products = productRepository.findByUsername(pageableProductsSetting(pageChoice), username);
        return products.stream().map(ProductResponseDto::new).collect(Collectors.toList());

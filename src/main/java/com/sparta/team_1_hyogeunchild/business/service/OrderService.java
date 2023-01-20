@@ -31,7 +31,7 @@ public class OrderService {
     private final SellerRepository sellerRepository;
 
     // 1. 가게별로 받은 요청 조회
-    @Transactional
+    @Transactional(readOnly = true)
     public List<OrderResponseDto> getOrders(int page, User user){
         Pageable pageable = pageableSetting(page);
         Seller seller = sellerRepository.findByUsername(user.getUsername()).orElseThrow(

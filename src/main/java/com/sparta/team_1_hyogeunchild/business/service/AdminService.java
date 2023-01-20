@@ -101,7 +101,7 @@ public class AdminService {
     //5. 등급 업 심사 대기중인 사람들 조회
     //List로 감싸준 이유는 어쨋든 보내주거나하려면 List에 넣어서 보내주기때문에
     //처음부터 감싸서 만든것이다.
-    @Transactional
+    @Transactional(readOnly = true)
     public List<AdminPromoteShowResponseDto> getPromoteWaitBuyer(int page, int size){
         //분리해주었다 아래 메소드 pageableSetting에 가고싶은 페이지 번호와 한페이지에 보고싶은 갯수를 보내준다.
         Pageable pageable = pageableSetting(page, size);

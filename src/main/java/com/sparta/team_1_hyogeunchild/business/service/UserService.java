@@ -93,6 +93,7 @@ public class UserService {
     }
 
     //4. 판매 상품 조회
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProducts(int pageChoice) {
         Page<Product> products = productRepository.findAll(pageableProductsSetting(pageChoice));
         return products.stream().map(ProductResponseDto::new).collect(Collectors.toList());
@@ -106,6 +107,7 @@ public class UserService {
 
 
     //5. 판매자 조회
+    @Transactional(readOnly = true)
     public List<SellerResponseDto> getAllSellers(int pageChoice) {
         Page<Seller> sellers = sellerRepository.findAll(pageableSellersSetting(pageChoice));
         return sellers.stream().map(SellerResponseDto::from).collect(Collectors.toList());
