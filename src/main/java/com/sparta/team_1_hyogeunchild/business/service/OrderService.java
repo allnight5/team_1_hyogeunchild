@@ -29,16 +29,6 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final SellerRepository sellerRepository;
-//    @Transactional
-//    public List<OrderResponseDto> getOrders(String username) {
-//        User user = userRepository.findByUsername(username).orElseThrow(
-//                () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
-//        );
-//
-//        List<Order> orders = orderRepository.findAllByStoreName(user.getStoreName());
-//
-//        return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
-//    }
 
     // 1. 가게별로 받은 요청 조회
     @Transactional

@@ -118,13 +118,6 @@ public class UserService {
         return PageRequest.of(pageChoice - 1, 10, sort);
     }
 
-//    public List<ProductResponseDto> getAllSellers(int pageChoice, User user){
-//        Page<Product> products = productRepository.findAllByUsername(user.getUsername(), 0, pageableSetting(pageChoice));
-//        List<ProductResponseDto> productResponseDtoList = products.stream().map(ProductResponseDto::new).collect(Collectors.toList());
-//        return productResponseDtoList;
-//    }
-
-
     //6. 판매자 전환 폼 요청
     @Transactional
     public PromoteUserResponseDto promoteUser(PromoteUserRequestDto requestDto, User user) {
@@ -148,18 +141,8 @@ public class UserService {
                 () -> new IllegalArgumentException("판매자 요청을 하지 않았습니다.")
         );
         promoteRepository.deleteByUserUsername(promote.getUser().getUsername());
-//        if(promoteRepository.findByUsername(user.getUsername()).isPresent()){
-//            Promote promote = promoteRepository.deleteByStoreName(user.getStoreName()).orElseThrow(
-//                    () -> new IllegalArgumentException("")
-//            );
-//            promoteRepository.delete(promote);
-//            System.out.println("판매자 요청을 취소하였습니다.");
-//        }  else{
-//            Promote promote = promoteRepository.deleteByStoreName(user.getStoreName()).orElseThrow(
-//                    () -> new IllegalArgumentException("판매자 요청 폼을 작성하지 않았습니다.")
-//            );
-//        }
     }
+
     //7. 유저 프로필 생성
     @Transactional
     public String createProfile(MultipartFile file, ProfileRequestDto requestDto, User user){
@@ -171,15 +154,4 @@ public class UserService {
         userRepository.save(user);
         return "생성이 완료되었습니다.";
     }
-
-
-    //8. 등급 업 심사 대기중인 사람들 조회
-
-
-//    //9.유저이름으로 DB 조회기능
-//    private User getUser(Optional<User> userRepository) {
-//        return userRepository.orElseThrow(
-//                () -> new IllegalArgumentException("사용자를 찾을수 없습니다.")
-//        );
-//    }
 }

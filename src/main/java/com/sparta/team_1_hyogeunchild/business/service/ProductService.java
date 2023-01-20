@@ -29,10 +29,6 @@ public class ProductService {
 
     @Transactional
     public List<ProductResponseDto> getProducts(String userName) {
-//        User user = userRepository.findByUsername(userName).orElseThrow(
-//                () -> new IllegalArgumentException("사용자가 존재하지 않습니다")
-//        );
-
         List<Product> products = productRepository.findAllByUsername(userName);
 
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
@@ -57,20 +53,6 @@ public class ProductService {
         Sort sort = Sort.by(direction, "id");
         return PageRequest.of(pageChoice - 1, 10, sort);
     }
-
-
-
-//    @Transactional
-//    public List<ProductResponseDto> getAllProducts() {
-//        List<Product> products = productRepository.findAll();
-//        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
-//
-//        for (Product product : products) {
-//            ProductResponseDto productResponseDto = new ProductResponseDto(product);
-//            productResponseDtoList.add(productResponseDto);
-//        }
-//        return productResponseDtoList;
-//    }
 
     @Transactional
     public String uploadProduct(ProductRequestDto requestDto, String userName) {
