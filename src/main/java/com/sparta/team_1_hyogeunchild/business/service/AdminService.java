@@ -1,7 +1,6 @@
 package com.sparta.team_1_hyogeunchild.business.service;
 
 import com.sparta.team_1_hyogeunchild.business.dto.*;
-import com.sparta.team_1_hyogeunchild.enums.MessageEnum;
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Promote;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,27 +41,28 @@ public class AdminService {
 
     //1.구매자 -> 판매자로 승급
     @Transactional
-    public AdminPromoteResponseDto promoteBuyer(Long promoteId){
+    public AdminPromoteResponseDto promoteBuyer(Long promoteId) {
         Promote promote = promoteRepository.findById(promoteId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 승급신청 번호입니다.")
         );
-            Seller seller = Seller.builder()
-                    .storeName(promote.getStoreName())
-                    .introduce(promote.getIntroduce())
-                    .category(promote.getCategory())
-                    .password(promote.getUser().getPassword())
-                    .role(UserRoleEnum.SELLER)
-                    .username(promote.getNewName())
-                    .build();
+        Seller seller = Seller.builder()
+                .storeName(promote.getStoreName())
+                .introduce(promote.getIntroduce())
+                .category(promote.getCategory())
+                .password(promote.getUser().getPassword())
+                .role(UserRoleEnum.SELLER)
+                .username(promote.getNewName())
+                .build();
 
-            promote.isPromoted(true);
-            sellerRepository.save(seller);
+        promote.isPromoted(1);
+        sellerRepository.save(seller);
         return new AdminPromoteResponseDto("판매자로 승급 신청이 승인되었습니다.");
     }
+
     //2. 판매자 자격 박탈->구매자
     //buyerAuthorization or promoteLossOfAuthority
     @Transactional
-    public AdminPromoteResponseDto degradeSeller(Long promoteId){
+    public AdminPromoteResponseDto degradeSeller(Long promoteId) {
         Promote promote = promoteRepository.findById(promoteId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 승급신청 번호입니다.")
         );
@@ -79,16 +80,18 @@ public class AdminService {
         userRepository.deleteByUsername(promote.getUser().getUsername());
         return new AdminPromoteResponseDto("판매자로 승급 신청이 승인되었습니다.");
     }
+
     //3. 유저 목록 조회
     @Transactional
-    public List<AdminBuyersResponseDto> getBuyer(int page, int size){
+    public List<AdminBuyersResponseDto> getBuyer(int page, int size) {
         Pageable pageable = pageableSetting(page, size);
         Page<User> user = userRepository.findByRole(UserRoleEnum.BUYER, pageable);
         return user.stream().map(AdminBuyersResponseDto::new).collect(Collectors.toList());
     }
+
     //4. 판매자 목록 조회
     @Transactional
-    public List<SellerResponseDto> getSeller(int page, int size){
+    public List<SellerResponseDto> getSeller(int page, int size) {
         Pageable pageable = pageableSetting(page, size);
 
         Page<Seller> sellers = sellerRepository.findAll(pageable);
@@ -96,11 +99,12 @@ public class AdminService {
 
         return sellers.stream().map(SellerResponseDto::from).collect(Collectors.toList());
     }
+
     //5. 등급 업 심사 대기중인 사람들 조회
     //List로 감싸준 이유는 어쨋든 보내주거나하려면 List에 넣어서 보내주기때문에
     //처음부터 감싸서 만든것이다.
     @Transactional
-    public List<AdminPromoteShowResponseDto> getPromoteWaitBuyer(int page, int size){
+    public List<AdminPromoteShowResponseDto> getPromoteWaitBuyer(int page, int size) {
         //분리해주었다 아래 메소드 pageableSetting에 가고싶은 페이지 번호와 한페이지에 보고싶은 갯수를 보내준다.
         Pageable pageable = pageableSetting(page, size);
         //Page객체안에 promote라는 제네릭스를 넣고 wait라는 변수명으로 생성후
@@ -119,7 +123,7 @@ public class AdminService {
 
     //5번 페이징 처리 분리
     //page는 가고싶은 페이지번호 size는 한페이지에 보고싶은 갯수이다.
-    public Pageable pageableSetting(int page, int size){
+    public Pageable pageableSetting(int page, int size) {
         //sort에 어떤 방식으로 정렬을 할것인가를 넣는다. ASC오름차순 정렬인가, DESC내림차순 정렬인가
 
         Sort.Direction direction = Sort.Direction.ASC;
@@ -135,10 +139,20 @@ public class AdminService {
         // 두번째 size의 경우 몇개나 한페이지에 보여주거나 보고싶은가이다
         // size가 3이면 3개를 10개면 DB에 들어있는것중 10개를 보여주거나 보겠다는 뜻이다
         // sort의 경우, 위에서 만든 정렬 방식이다 어떠한 것을 기준으로 정렬할것인지 하는것이다.
-        return PageRequest.of(page-1, size, sort);
+        return PageRequest.of(page - 1, size, sort);
     }
 
 
-    //6. (4번과 5번 통합)구매자 -> 판매자로 승급, 판매자 자격 박탈->구매자
+    //6. promoteRepository 에서 삭제되는 시간을 매일 0시로 고정
+    //    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 10 13 * * *")
+    @Transactional
+    public void deleteList() {
+        List<Promote> promotes = promoteRepository.findAllByIsPromoted(1);
+
+        for( Promote promote: promotes){
+            promoteRepository.delete(promote);
+        }
+    }
 
 }
