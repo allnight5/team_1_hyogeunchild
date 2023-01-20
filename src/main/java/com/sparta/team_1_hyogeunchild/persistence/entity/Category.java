@@ -16,20 +16,12 @@ public class Category {
     @Column(name = "Category_ID")
     private Long id;
     @Column(nullable = false)
-    private String nickName;
-    @Column(nullable = false)
-    private String category;
-    @Column(nullable = false)
-    private String username;
+    private String tag;
     @ManyToOne
     @JoinColumn(name="Seller_ID", nullable = false)
-    private User user;
+    private Seller seller;
 
-    public Category(String category,String nickName, User user){
-        this.nickName = nickName;
-        this.category = category;
-        this.username = user.getUsername();
-        this.user = user;
-
+    public Category(Seller seller){
+        this.seller = seller;
     }
 }

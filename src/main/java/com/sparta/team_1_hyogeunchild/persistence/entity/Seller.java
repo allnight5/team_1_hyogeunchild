@@ -6,11 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.List;
 
-@Entity
+@Entity(name = "seller")
 @DiscriminatorValue(value = "Seller")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -20,6 +19,8 @@ public class Seller extends User {
     private String category;
     @Column(nullable = false)
     private String introduce;
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Category> categories;
 
     // 문제? -> Seller 인스턴스가 +1 되는거에요. USER1 -> SELLER / USER2 이자 Seller < / Buyer로도 주고 Seller 로도 주면 로그인 부분이 좀 문제가 있을 수가 있다.<
     // 우리의 로직은 대부분 UserName < 더 문제의 여지가 있다. < unique 를 풀면 < Seller 새 회원이름 다오 하면 노상관.
@@ -34,7 +35,7 @@ public class Seller extends User {
         this.category = category;
     }
 
-    public void update(String storeName) {
+    public void update(String username, String password, UserRoleEnum role, String storeName) {
         this.storeName = storeName;
     }
 
