@@ -54,6 +54,7 @@ public class AdminService {
                     .username(promote.getNewName())
                     .build();
 
+            promote.isPromoted(true);
             sellerRepository.save(seller);
         return new AdminPromoteResponseDto("판매자로 승급 신청이 승인되었습니다.");
     }
