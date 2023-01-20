@@ -24,7 +24,7 @@ public class Promote extends Timestaped {
     private String newName;
     private String introduce;
     private String category;
-    @Column(nullable = false)
+    @Column
     private Integer isPromoted;
 
     // 바이어가 이미 주문한 오더는, 바이어로써 확인 가능하고
