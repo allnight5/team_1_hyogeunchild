@@ -1,6 +1,6 @@
 package com.sparta.team_1_hyogeunchild.business.service;
 
-import com.sparta.team_1_hyogeunchild.business.dto.OrderMessageResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.MessageResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.OrderRequestDto;
 import com.sparta.team_1_hyogeunchild.business.dto.OrderResponseDto;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Order;
@@ -83,7 +83,7 @@ public class OrderService {
 
     // 3. 고객 요청 처리응답
     @Transactional
-    public OrderMessageResponseDto availableOrder(OrderAvailableRequestDto requestDto, String username){
+    public MessageResponseDto availableOrder(OrderAvailableRequestDto requestDto, String username){
         Seller seller = sellerRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("판매자가 존재하지 않습니다.")
         );
@@ -95,11 +95,11 @@ public class OrderService {
         Long available = requestDto.getAvailable();
         order.orderAvailable(available);
         if(available == 1){
-            return new OrderMessageResponseDto("정상적으로 주문이 완료되었습니다.");
+            return new MessageResponseDto("정상적으로 주문이 완료되었습니다.");
         }else if(available == 2){
-            return new OrderMessageResponseDto("주문을 취소하였습니다.");
+            return new MessageResponseDto("주문을 취소하였습니다.");
         }else{
-            return new OrderMessageResponseDto("주문을 확인 할 수 없습니다.");
+            return new MessageResponseDto("주문을 확인 할 수 없습니다.");
         }
     }
 }

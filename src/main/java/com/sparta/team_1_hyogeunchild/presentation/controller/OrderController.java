@@ -1,6 +1,6 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 
-import com.sparta.team_1_hyogeunchild.business.dto.OrderMessageResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.MessageResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.OrderRequestDto;
 import com.sparta.team_1_hyogeunchild.business.dto.OrderResponseDto;
 import com.sparta.team_1_hyogeunchild.business.service.OrderService;
@@ -34,7 +34,7 @@ public class OrderController {
 
     @PutMapping("/available")
     @PreAuthorize("hasRole('SELLER')")
-    public OrderMessageResponseDto availableOrder(@RequestBody OrderAvailableRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public MessageResponseDto availableOrder(@RequestBody OrderAvailableRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return orderService.availableOrder(requestDto, userDetails.getUser().getUsername());
     }
 

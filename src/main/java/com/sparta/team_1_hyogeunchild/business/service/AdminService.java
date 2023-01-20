@@ -1,7 +1,6 @@
 package com.sparta.team_1_hyogeunchild.business.service;
 
 import com.sparta.team_1_hyogeunchild.business.dto.*;
-import com.sparta.team_1_hyogeunchild.enums.MessageEnum;
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Promote;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
@@ -9,7 +8,6 @@ import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.PromoteRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.SellerRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
-import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +39,7 @@ public class AdminService {
 
     //1.구매자 -> 판매자로 승급
     @Transactional
-    public AdminPromoteResponseDto promoteBuyer(Long promoteId){
+    public MessageResponseDto promoteBuyer(Long promoteId){
         Promote promote = promoteRepository.findById(promoteId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 승급신청 번호입니다.")
         );
@@ -56,12 +54,12 @@ public class AdminService {
 
             promote.isPromoted(true);
             sellerRepository.save(seller);
-        return new AdminPromoteResponseDto("판매자로 승급 신청이 승인되었습니다.");
+        return new MessageResponseDto("판매자로 승급 신청이 승인되었습니다.");
     }
     //2. 판매자 자격 박탈->구매자
     //buyerAuthorization or promoteLossOfAuthority
     @Transactional
-    public AdminPromoteResponseDto degradeSeller(Long promoteId){
+    public MessageResponseDto degradeSeller(Long promoteId){
         Promote promote = promoteRepository.findById(promoteId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 승급신청 번호입니다.")
         );
@@ -77,7 +75,7 @@ public class AdminService {
 
         sellerRepository.save(seller);
         userRepository.deleteByUsername(promote.getUser().getUsername());
-        return new AdminPromoteResponseDto("판매자로 승급 신청이 승인되었습니다.");
+        return new MessageResponseDto("판매자로 승급 신청이 승인되었습니다.");
     }
     //3. 유저 목록 조회
     @Transactional
