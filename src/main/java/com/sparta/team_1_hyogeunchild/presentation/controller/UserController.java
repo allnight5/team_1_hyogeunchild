@@ -1,7 +1,6 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 import com.sparta.team_1_hyogeunchild.business.dto.*;
 import com.sparta.team_1_hyogeunchild.business.service.UserService;
-import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 //메서드 혹은 클래스 단위로 Mapping을 주어 중복 URL을 공통으로 처리할 수 있다
@@ -70,7 +68,7 @@ public class UserController {
     }
     //5. 판매자 목록조회
     @GetMapping("/sellerlist")
-    public List<UserResponseDto> getAllSellers(@PageableDefault Pageable pageable){
+    public List<SellerResponseDto> getAllSellers(@PageableDefault Pageable pageable){
         return userService.getAllSellers(pageable.getPageNumber());
     }
     //6. 판매 상품 목록 조회

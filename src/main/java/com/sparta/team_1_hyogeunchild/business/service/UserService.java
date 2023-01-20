@@ -8,6 +8,7 @@ import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.PromoteRepository;
+import com.sparta.team_1_hyogeunchild.persistence.repository.SellerRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
@@ -22,10 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +37,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final ProductRepository productRepository;
+    private final SellerRepository sellerRepository;
 
     private final FileService fileService;
 
@@ -109,9 +109,9 @@ public class UserService {
 
 
     //5. 판매자 조회
-    public List<UserResponseDto> getAllSellers(int pageChoice) {
-        Page<User> users = userRepository.findByRole(UserRoleEnum.SELLER, pageableSellersSetting(pageChoice));
-        return users.stream().map(UserResponseDto::new).collect(Collectors.toList());
+    public List<SellerResponseDto> getAllSellers(int pageChoice) {
+        Page<Seller> sellers = sellerRepository.findAll(pageableSellersSetting(pageChoice));
+        return sellers.stream().map(SellerResponseDto::from).collect(Collectors.toList());
 
     }
 
@@ -131,7 +131,7 @@ public class UserService {
     //6. 판매자 전환 폼 요청
     @Transactional
     public PromoteUserResponseDto promoteUser(PromoteUserRequestDto requestDto, User user) {
-        if (promoteRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (promoteRepository.findByUserUsername(user.getUsername()).isPresent()) {
             throw new SecurityException("이미 판매자 전환 요청을 하였습니다.");
         }
         Promote promote = new Promote(requestDto, user);
@@ -147,10 +147,10 @@ public class UserService {
                 () -> new IllegalArgumentException("유저가 없습니다.")
         );
 
-        Promote promote = promoteRepository.findByUsername(user1.getUsername()).orElseThrow(
+        Promote promote = promoteRepository.findByUserUsername(user1.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("판매자 요청을 하지 않았습니다.")
         );
-        promoteRepository.deleteByUsername(promote.getUser().getUsername());
+        promoteRepository.deleteByUserUsername(promote.getUser().getUsername());
 //        if(promoteRepository.findByUsername(user.getUsername()).isPresent()){
 //            Promote promote = promoteRepository.deleteByStoreName(user.getStoreName()).orElseThrow(
 //                    () -> new IllegalArgumentException("")

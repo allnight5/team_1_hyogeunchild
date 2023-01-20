@@ -5,9 +5,11 @@ import com.sparta.team_1_hyogeunchild.business.dto.OrderRequestDto;
 import com.sparta.team_1_hyogeunchild.business.dto.OrderResponseDto;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Order;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Product;
+import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.OrderRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
+import com.sparta.team_1_hyogeunchild.persistence.repository.SellerRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import com.sparta.team_1_hyogeunchild.presentation.dto.OrderAvailableRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+    private final SellerRepository sellerRepository;
 //    @Transactional
 //    public List<OrderResponseDto> getOrders(String username) {
 //        User user = userRepository.findByUsername(username).orElseThrow(
@@ -37,11 +40,14 @@ public class OrderService {
 //        return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
 //    }
 
-    // 1. 고객 요청 목록 조회
+    // 1. 가게별로 받은 요청 조회
     @Transactional
     public List<OrderResponseDto> getOrders(int page, User user){
         Pageable pageable = pageableSetting(page);
-        Page<Order> orders = orderRepository.findAllByStoreName(user.getStoreName(), pageable);
+        Seller seller = sellerRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("판매자가 없습니다.")
+        );
+        Page<Order> orders = orderRepository.findAllByStoreName(seller.getStoreName(), pageable);
         return orders.stream().map(OrderResponseDto::new).collect(Collectors.toList());
     }
     public Pageable pageableSetting(int page){
@@ -77,14 +83,15 @@ public class OrderService {
 
     // 3. 고객 요청 처리응답
     @Transactional
-    public OrderMessageResponseDto availableOrder(OrderAvailableRequestDto requestDto, String storeName){
-//        Order order = orderRepository.findByUserUsernameAndId(username, requestDto.getId());
-//        Order order = orderRepository.findById(requestDto.getId()).orElseThrow(
-//                ()-> new IllegalArgumentException("주문번호가 존재하지 않습니다.")
-//        );
-        Order order = orderRepository.findByIdAndStoreName(requestDto.getId(), storeName).orElseThrow(
+    public OrderMessageResponseDto availableOrder(OrderAvailableRequestDto requestDto, String username){
+        Seller seller = sellerRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("판매자가 존재하지 않습니다.")
+        );
+
+        Order order = orderRepository.findByIdAndStoreName(requestDto.getId(), seller.getStoreName()).orElseThrow(
                 ()-> new IllegalArgumentException("주문번호가 존재하지 않습니다.")
         );
+
         Long available = requestDto.getAvailable();
         order.orderAvailable(available);
         if(available == 1){

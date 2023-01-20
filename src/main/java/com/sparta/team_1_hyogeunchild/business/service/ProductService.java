@@ -101,9 +101,8 @@ public class ProductService {
         Product product = productRepository.findByIdAndUsername(id, seller.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("상품이 존재하지 않습니다.")
         );
-        sellersellerseller
 
-        product.update(requestDto, seller);
+        product.update(requestDto);
 
         return new ProductResponseDto(product);
     }

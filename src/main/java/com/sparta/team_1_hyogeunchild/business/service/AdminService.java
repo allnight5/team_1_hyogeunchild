@@ -49,7 +49,8 @@ public class AdminService {
 
             Seller seller = Seller.builder()
                     .storeName(promote.getStoreName())
-                    .comment(promote.getComment())
+                    .introduce(promote.getIntroduce())
+                    .category(promote.getCategory())
                     .password(promote.getUser().getPassword())
                     .role(UserRoleEnum.SELLER)
                     .username(promote.getUser().getUsername())
@@ -75,7 +76,7 @@ public class AdminService {
 
         Seller seller = Seller.builder()
                 .storeName(promote.getStoreName())
-                .comment(promote.getComment())
+                .introduce(promote.getIntroduce())
                 .password(promote.getUser().getPassword())
                 .role(promote.getUser().getRole())
                 .username(promote.getUser().getUsername())
@@ -94,10 +95,13 @@ public class AdminService {
     }
     //4. 판매자 목록 조회
     @Transactional
-    public List<AdminSellersResponseDto> getSeller(int page, int size){
+    public List<SellerResponseDto> getSeller(int page, int size){
         Pageable pageable = pageableSetting(page, size);
-        Page<User> user = userRepository.findByRole(UserRoleEnum.SELLER, pageable);
-        return user.stream().map(AdminSellersResponseDto::new).collect(Collectors.toList());
+
+        Page<Seller> sellers = sellerRepository.findAll(pageable);
+
+
+        return sellers.stream().map(SellerResponseDto::from).collect(Collectors.toList());
     }
     //5. 등급 업 심사 대기중인 사람들 조회
     //List로 감싸준 이유는 어쨋든 보내주거나하려면 List에 넣어서 보내주기때문에

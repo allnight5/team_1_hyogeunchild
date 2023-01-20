@@ -43,7 +43,7 @@ public class AdminController {
     }
 //    4. 판매자 목록조회
     @GetMapping("/sellerList")
-        public List<AdminSellersResponseDto> getSeller(@PageableDefault Pageable pageable){
+        public List<SellerResponseDto> getSeller(@PageableDefault Pageable pageable){
         return adminService.getSeller(pageable.getPageNumber(), pageable.getPageSize());
     }
 

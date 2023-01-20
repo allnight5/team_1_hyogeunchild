@@ -17,7 +17,6 @@ public class Seller extends User {
 
     private String storeName;
     private String category;
-    private String comment;
     private String introduce;
 
     // 문제? -> Seller 인스턴스가 +1 되는거에요. USER1 -> SELLER / USER2 이자 Seller < / Buyer로도 주고 Seller 로도 주면 로그인 부분이 좀 문제가 있을 수가 있다.<
@@ -26,10 +25,11 @@ public class Seller extends User {
     // 새 객체 만드는거 문제 없다. 근데 userName이 중복이다. < ID는 다름
     // 펭귄(부모클래스) 뒤뚱뒤뚱걷고, 날개+다리두개 -> 뽀로로(자식클래스) + 안경을 특이한거 쓴다 // 황제펭귄(자식클래스) + 황제다 <
     @Builder
-    public Seller(String username, String password, UserRoleEnum role, String storeName, String comment) {
+    public Seller(String username, String password, UserRoleEnum role, String storeName, String category, String introduce) {
         super(username, password, role);
         this.storeName = storeName;
-        this.comment = comment;
+        this.introduce = introduce;
+        this.category = category;
     }
 
     public void update(String storeName) {

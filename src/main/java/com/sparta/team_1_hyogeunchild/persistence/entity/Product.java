@@ -23,7 +23,6 @@ public class Product extends Timestaped {
     private Long price;
     @Column(nullable = false)
     private String username;
-
     @Column(nullable = false)
     private String storeName;
 
@@ -37,10 +36,10 @@ public class Product extends Timestaped {
         this.username = username;
     }
 
-    public void update(ProductRequestDto requestDto, User user) {
+    public void update(ProductRequestDto requestDto) {
         this.productName = requestDto.getProductName();
         this.amount = requestDto.getAmount();
         this.price = requestDto.getPrice();
-        this.storeName = user.seller();
+        this.storeName = requestDto.getProductName();
     }
 }

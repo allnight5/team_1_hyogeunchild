@@ -21,13 +21,15 @@ public class Promote extends Timestaped {
     private String password;
     @ManyToOne
     private User user;
-    private String comment;
+    private String introduce;
+    private String category;
 
     public Promote(PromoteUserRequestDto requestDto, User user){
         this.storeName = requestDto.getStoreName();
         this.user = user;
         this.password = requestDto.getPassword();
-
+        this.category = requestDto.getCategory();
+        this.introduce = requestDto.getIntroduce();
     }
 
 

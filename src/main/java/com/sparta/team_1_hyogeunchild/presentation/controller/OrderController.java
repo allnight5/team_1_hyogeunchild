@@ -23,7 +23,7 @@ public class OrderController {
 
     @GetMapping
     public List<OrderResponseDto> getOrders(@PageableDefault Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return orderService.getOrders(pageable.getPageNumber(),userDetails.getUser());
+        return orderService.getOrders(pageable.getPageNumber(), userDetails.getUser());
     }
 
     @PostMapping("/{productId}")
@@ -35,7 +35,7 @@ public class OrderController {
     @PutMapping("/available")
     @PreAuthorize("hasRole('SELLER')")
     public OrderMessageResponseDto availableOrder(@RequestBody OrderAvailableRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return orderService.availableOrder(requestDto, userDetails.getUser().getStoreName());
+        return orderService.availableOrder(requestDto, userDetails.getUser().getUsername());
     }
 
 }
