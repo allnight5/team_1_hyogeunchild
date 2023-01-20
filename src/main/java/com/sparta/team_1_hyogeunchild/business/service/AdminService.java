@@ -9,11 +9,13 @@ import com.sparta.team_1_hyogeunchild.persistence.repository.PromoteRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.SellerRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AdminService {
 
@@ -136,10 +139,12 @@ public class AdminService {
         // sort의 경우, 위에서 만든 정렬 방식이다 어떠한 것을 기준으로 정렬할것인지 하는것이다.
         return PageRequest.of(page-1, size, sort);
     }
-    @Scheduled(cron = "0 10 13 * * *")
+    @Scheduled(cron = "0 * * * * *")
     @Transactional
     public void deleteList() {
         List<Promote> promotes = promoteRepository.findAllByIsPromoted(1);
+        log.info("삭제대상 {}",promotes);
+        // 중괄호에 promotes 객체가 출력된다.
         promoteRepository.deleteAll(promotes);
     }
 
