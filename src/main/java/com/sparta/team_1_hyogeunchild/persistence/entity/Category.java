@@ -16,7 +16,7 @@ public class Category {
     @Column(name = "Category_ID")
     private Long id;
     @Column(nullable = false)
-    private String tag;
+    private String tag; // ex) 고양이 / 고양이모래 등등 ~
     @ManyToOne
     @JoinColumn(name="Seller_ID", nullable = false)
     private Seller seller;

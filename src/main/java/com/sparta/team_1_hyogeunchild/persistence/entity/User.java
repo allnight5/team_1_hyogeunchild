@@ -1,6 +1,7 @@
 package com.sparta.team_1_hyogeunchild.persistence.entity;
 
 import com.sparta.team_1_hyogeunchild.enums.UserRoleEnum;
+import com.sparta.team_1_hyogeunchild.presentation.dto.SignUpRequestDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +35,6 @@ public class User extends Timestaped {
         this.password = password;
         this.role = role;
     }
-
     public void changeProfile(String nickName, String image){
         this.nickName = nickName;
         this.image =image;

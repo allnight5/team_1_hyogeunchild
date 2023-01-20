@@ -1,6 +1,7 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 
 import com.sparta.team_1_hyogeunchild.business.service.UserService;
+import com.sparta.team_1_hyogeunchild.persistence.repository.UserRepository;
 import com.sparta.team_1_hyogeunchild.presentation.dto.SignUpRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -19,6 +21,8 @@ class UserControllerTest {
     private UserController userController;
     @Mock
     private UserService userService;
+    @InjectMocks
+    private UserRepository userRepository;
 
     @BeforeEach
     public void init(){
@@ -35,7 +39,16 @@ class UserControllerTest {
     @DisplayName("회원가입 테스트")
     @Test
     void signupPage() {
+        //given
         SignUpRequestDto requestDto = signUpRequest();
+        String response = "성공";
+
+        //when
+        userController.signupPage(requestDto);
+        userRepository.findByUsername("username");
+
+        //then
+        assertEquals(userRepository.findByUsername(requestDto.getUsername()),userRepository.findByUsername("username"));
     }
 
     @Test

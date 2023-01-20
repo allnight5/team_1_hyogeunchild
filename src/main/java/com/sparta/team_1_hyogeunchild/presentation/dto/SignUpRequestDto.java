@@ -24,4 +24,6 @@ public class SignUpRequestDto {
     private boolean admin = false;
     private String adminToken = "";
     private boolean isSeller = false;
+    private String image;
+    private String nickName;
 }
