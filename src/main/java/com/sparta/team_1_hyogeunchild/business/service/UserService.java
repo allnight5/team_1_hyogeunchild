@@ -163,11 +163,10 @@ public class UserService {
     //7. 유저 프로필 생성
     @Transactional
     public String createProfile(MultipartFile file, ProfileRequestDto requestDto, User user){
-        String saveImageName = user.getUsername() + file.getOriginalFilename();
-//        String uuid = UUID.randomUUID().toString();
-//        String unique = uuid.substring(0, 7);
-//        String filename = unique+ "_" + multipartFile.getOriginalFilename();
-        user.changeProfile(requestDto.getNickName(), saveImageName);
+        String saveLocal = "C:/Users/mind/sparta_java/team_1_hyogeunchild/src/main/resources/static/image/";
+        String saveImageName = user.getUsername();
+        String updateImageData= saveLocal+saveImageName;
+        user.changeProfile(requestDto.getNickName(), updateImageData);
         fileService.upload(file, saveImageName);
         userRepository.save(user);
         return "생성이 완료되었습니다.";
