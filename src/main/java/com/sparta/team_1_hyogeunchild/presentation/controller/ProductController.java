@@ -27,11 +27,6 @@ public class ProductController {
         return productService.getAllProducts(pageable.getPageNumber(), userDetails.getUsername());
     }
 
-//    @GetMapping("/all")
-//    public List<ProductResponseDto> getAllProducts(){
-//        return productService.getAllProducts();
-//    }
-
     @PostMapping("")
     public String uploadProduct(@RequestBody ProductRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return productService.uploadProduct(requestDto, userDetails.getUsername());

@@ -2,7 +2,6 @@ package com.sparta.team_1_hyogeunchild.presentation.controller;
 
 import com.sparta.team_1_hyogeunchild.business.dto.*;
 import com.sparta.team_1_hyogeunchild.business.service.AdminService;
-import com.sparta.team_1_hyogeunchild.presentation.dto.AdminPromoteRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,7 +23,7 @@ public class AdminController {
     } // 아니 근데 name만 받고...승급시켜줘도 되는거야? -> 돼. 인증 객체, 그것도 본인만 promote 신청을 할 수 있게 해놨어.
 
     @PutMapping("/promote/{id}")
-    public AdminPromoteResponseDto promote(@PathVariable Long id){
+    public MessageResponseDto promote(@PathVariable Long id){
         return adminService.promoteBuyer(id);
     } // RequestBody 가 아닌, List에서 id를 보고 지울 수 있는 편이 더 효율적이고 그럴듯합니다.
     // 프론트단에서 실제로 요청을 처리할때는, 목록을 보고 단순히 승급을 통과시키거나 / 거절시키는 형태로 만들 것입니다.
@@ -32,7 +31,7 @@ public class AdminController {
 
     //2. 판매자 자격 박탈->구매자
 //    @PutMapping("/degrade")
-//    public AdminPromoteResponseDto degrade(@RequestBody AdminPromoteRequestDto requestDto){
+//    public MessageResponseDto degrade(@RequestBody AdminPromoteRequestDto requestDto){
 //        return adminService.degradeSeller(requestDto.getUsername());
 //    }
 

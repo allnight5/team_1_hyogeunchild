@@ -32,25 +32,25 @@ public class UserController {
     //->@RequestBody 어노테이션 옆에 @Valid를 작성하면, RequestBody로 들어오는 객체에 대한 검증을 수행한다.
     // 이 검증의 세부적인 사항은 객체 안에 정의를 해두어야 한다.ex)정규표현식
     @PostMapping("/signup")
-    public CreateResponseDto signupPage(@RequestBody @Valid SignUpRequestDto signupRequestDto) {
+    public MessageResponseDto signupPage(@RequestBody @Valid SignUpRequestDto signupRequestDto) {
         return userService.signUp(signupRequestDto);
     }
     //2.로그인
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public MessageResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         //이름과 유저인지 관리자인지 구분한 토큰을 가져오는 부분
-        LoginResponseDto msg = userService.login(loginRequestDto);
+        MessageResponseDto msg = userService.login(loginRequestDto);
         //문자열 token에 가져온 정보를 넣어주는 부분
         String token = msg.getMessage();
         //헤더를 통해 토큰을 발급해 주는 부분
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
-        return new LoginResponseDto("로그인 되었습니다.");
+        return new MessageResponseDto("로그인 되었습니다.");
     }
     //3.유저 삭제
     @DeleteMapping("/delete")
     //@AuthenticationPrincipal -> 세션 정보 UserDetails에 접근할 수 있는 어노테이션
     //현재 로그인한 사용자 객체를 가져오기 위해 필요
-    public DeleteResponseDto delete(@RequestBody UserDeleteRequestDto deleteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public MessageResponseDto delete(@RequestBody UserDeleteRequestDto deleteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.deleteUser(deleteRequestDto, userDetails.getUser());
     }
     //4. 판매자로 요청

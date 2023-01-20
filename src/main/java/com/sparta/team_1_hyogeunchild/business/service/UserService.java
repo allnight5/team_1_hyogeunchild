@@ -41,7 +41,7 @@ public class UserService {
 
     //1.회원가입
     @Transactional
-    public CreateResponseDto signUp(SignUpRequestDto requestDto) {
+    public MessageResponseDto signUp(SignUpRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
 
@@ -58,12 +58,12 @@ public class UserService {
         }
         User user = new User(username, password, role);
         userRepository.save(user);
-        return new CreateResponseDto("회원가입 성공");
+        return new MessageResponseDto("회원가입 성공");
     }
 
     //2.로그인
     @Transactional
-    public LoginResponseDto login(LoginRequestDto requestDto) {
+    public MessageResponseDto login(LoginRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
 
@@ -74,12 +74,12 @@ public class UserService {
             throw new SecurityException("사용자를 찾을수 없습니다.");
         }
 
-        return new LoginResponseDto(jwtUtil.createToken(user.getUsername(), user.getRole()));
+        return new MessageResponseDto(jwtUtil.createToken(user.getUsername(), user.getRole()));
     }
 
     //3.회원탈퇴
     @Transactional
-    public DeleteResponseDto deleteUser(UserDeleteRequestDto deleteRequestDto, User user) {
+    public MessageResponseDto deleteUser(UserDeleteRequestDto deleteRequestDto, User user) {
         //앞에는 지금 로그인한 유저가 게시글 작성한 유저와 같은지 검사함
         //뒤에는 지금이 로그인한사람이 유저인지 관리자인지 검사함
         if (user.getRole().equals(UserRoleEnum.ADMIN) ||
@@ -87,7 +87,7 @@ public class UserService {
                         passwordEncoder.matches(deleteRequestDto.getPassword(), user.getPassword())) {
             //DB에서 삭제처리를 해줌
             userRepository.deleteByUsername(deleteRequestDto.getUsername());
-            return new DeleteResponseDto("삭제 성공");
+            return new MessageResponseDto("삭제 성공");
         }
         throw new SecurityException("가입한 회원만이 탈퇴할 수 있습니다.");
     }
