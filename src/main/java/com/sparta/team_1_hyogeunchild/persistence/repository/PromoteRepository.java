@@ -13,7 +13,6 @@ public interface PromoteRepository extends JpaRepository<Promote, Long> {
 
     Optional<Promote> findByUserUsername(String username);
     void deleteByUserUsername(String username);
-
     List<Promote> findAllByIsPromoted(Integer isPromoted);
 
     //기준없이 전부다 가져온다.
