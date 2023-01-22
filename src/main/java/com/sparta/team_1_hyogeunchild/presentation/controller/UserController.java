@@ -1,6 +1,8 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 import com.sparta.team_1_hyogeunchild.business.dto.*;
+import com.sparta.team_1_hyogeunchild.business.service.SellerService;
 import com.sparta.team_1_hyogeunchild.business.service.UserService;
+import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
 import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -85,6 +88,11 @@ public class UserController {
     ){
 
         return userService.createProfile(file, requestDto, userDetails.getUser());
+    }
+
+    @GetMapping("/seller/{id}")
+    public SellerResponseDto getSeller(@PathVariable Long id){
+        return userService.getSeller(id);
     }
 
     //8.유저 프로필 이미지 변경

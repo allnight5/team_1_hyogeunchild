@@ -21,6 +21,6 @@ public class SellerProfileResponseDto {
         this.storeName = seller.getStoreName();
         this.image = seller.getImage();
         this.introduce = seller.getIntroduce();
-        this.categoryList = seller.getCategories().stream().map(CategoryResponseDto::new).collect(Collectors.toList());
+        this.categoryList = seller.getCategories();
     }
 }

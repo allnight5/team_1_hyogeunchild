@@ -1,11 +1,13 @@
 package com.sparta.team_1_hyogeunchild.business.service;
 
 import com.sparta.team_1_hyogeunchild.business.dto.SellerProfileResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.SellerResponseDto;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Category;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.CategoryRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.SellerRepository;
+import com.sparta.team_1_hyogeunchild.presentation.dto.CategoryRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sparta.team_1_hyogeunchild.enums.MessageEnum.UPDATE_CATEGORY_SUCCESS;
+import static com.sparta.team_1_hyogeunchild.enums.MessageEnum.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,35 +25,25 @@ public class SellerService {
     private final SellerRepository sellerRepository;
     //1.카테고리 생성
     @Transactional
-    public String updateCategory(List<String> categorys, User user){
-        List<Category> categoryList = new ArrayList<>();
-        for(String category : categorys){
-            Category updateCategory= new Category(category, user.getNickName(), user);
-            categoryList.add(updateCategory);
-        }
-        categoryRepository.saveAll(categoryList);
-        //성공했다는 메시지 발송
-        return UPDATE_CATEGORY_SUCCESS.getMessage();
-        //카테고리 유저 닉네임기준으로 조회할때 seller면 seller.getNickName()변경 필요
+    public String createCategory(CategoryRequestDto requestDto, Seller seller){
+        Category category = Category.builder()
+                .seller(seller)
+                .tag(requestDto.getTag())
+                .build();
+        categoryRepository.save(category);
+        return CREATE_CATEGORY_SUCCESS.getMessage();
     }
-    //2.판매자 프로필 조회
-    @Transactional
-    public SellerProfileResponseDto getProfileSeller(User user, Long sellerId){
-        Seller seller = sellerRepository.findByIdAndUsername(sellerId, user.getUsername()).orElseThrow(
-                ()-> new IllegalArgumentException("올바른 유저 번호를 입력 해주세요.")
-        );
 
-        //localhost:8080/seller/profile
-        List<Category> categoryList = categoryRepository.findAllByNickName(user.getNickName());
-        return new SellerProfileResponseDto(seller);
-    }
-    //카테고리 삭제
     @Transactional
-    public String deleteCategory(Long id, User user){
-        Category category = categoryRepository.findByIdAndSellerUsername(id,user.getUsername()).orElseThrow(
-                ()-> new IllegalArgumentException("카테고리가 존재하지 않습니다.")
+    public String deleteCategory(Long id, Seller seller){
+        Category category = categoryRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("특정하신 카테고리가 없습니다.")
         );
-        categoryRepository.deleteById(category.getId());
-        return "삭제 되었습니다.";
+        if(category.getSeller().getId().equals(seller.getId())) {
+            categoryRepository.delete(category);
+        } else {
+            throw new IllegalArgumentException("자신의 태그만 삭제할 수 있습니다.");
+        }
+        return DELETE_CATEGORY_SUCCESS.getMessage();
     }
 }

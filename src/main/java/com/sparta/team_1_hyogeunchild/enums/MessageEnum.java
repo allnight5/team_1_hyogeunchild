@@ -15,7 +15,8 @@ public enum MessageEnum {
     //------------------------------------------------
     //------------------------------------------------
     //카테고리 관련
-    UPDATE_CATEGORY_SUCCESS("카테고리 변경에 성공했습니다. success category update"),
+    CREATE_CATEGORY_SUCCESS("카테고리 생성에 성공했습니다. success category update"),
+    DELETE_CATEGORY_SUCCESS("카테고리 삭제에 성공했습니다. successfully deleted category"),
     UPDATE_CATEGORY_FAIL("카테고리 변경에 실패하고 말았습니다. fail category update");
 
     //------------------------------------------------

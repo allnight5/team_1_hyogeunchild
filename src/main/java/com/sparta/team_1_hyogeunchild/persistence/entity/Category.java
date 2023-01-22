@@ -1,6 +1,7 @@
 package com.sparta.team_1_hyogeunchild.persistence.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,8 +21,9 @@ public class Category {
     @ManyToOne
     @JoinColumn(name="Seller_ID", nullable = false)
     private Seller seller;
-
-    public Category(Seller seller){
+    @Builder
+    public Category(Seller seller, String tag){
+        this.tag = tag;
         this.seller = seller;
     }
 }

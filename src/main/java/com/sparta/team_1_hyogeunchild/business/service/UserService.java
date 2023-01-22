@@ -156,4 +156,12 @@ public class UserService {
         userRepository.save(user);
         return "생성이 완료되었습니다.";
     }
+
+    @Transactional
+    public SellerResponseDto getSeller(Long id){
+        Seller seller = sellerRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("찾으시는 판매자가 없습니다")
+        );
+        return SellerResponseDto.from(seller);
+    }
 }

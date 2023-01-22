@@ -16,7 +16,6 @@ import java.util.List;
 public class Seller extends User {
     @Column(nullable = false)
     private String storeName;
-    private String category;
     @Column(nullable = false)
     private String introduce;
     @OneToMany(mappedBy = "seller", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -28,16 +27,9 @@ public class Seller extends User {
     // 새 객체 만드는거 문제 없다. 근데 userName이 중복이다. < ID는 다름
     // 펭귄(부모클래스) 뒤뚱뒤뚱걷고, 날개+다리두개 -> 뽀로로(자식클래스) + 안경을 특이한거 쓴다 // 황제펭귄(자식클래스) + 황제다 <
     @Builder
-    public Seller(String username, String password, UserRoleEnum role, String storeName, String category, String introduce) {
+    public Seller(String username, String password, UserRoleEnum role, String storeName, String introduce) {
         super(username, password, role);
         this.storeName = storeName;
         this.introduce = introduce;
-        this.category = category;
     }
-
-    public void update(String username, String password, UserRoleEnum role, String storeName) {
-        this.storeName = storeName;
-    }
-
-    public void addCategory(String category){this.category = this.category+", "+category;}
 }

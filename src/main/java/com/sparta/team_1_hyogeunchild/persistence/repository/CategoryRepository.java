@@ -8,9 +8,4 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Category> findByNickName(String nickName);
-
-    List<Category> findAllByNickName(String nickName);
-
-    Optional<Category> findByIdAndSellerUsername(Long id, String sellerName);
 }

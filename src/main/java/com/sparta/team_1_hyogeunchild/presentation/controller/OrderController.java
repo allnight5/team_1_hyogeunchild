@@ -37,5 +37,4 @@ public class OrderController {
     public MessageResponseDto availableOrder(@RequestBody OrderAvailableRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return orderService.availableOrder(requestDto, userDetails.getUser().getUsername());
     }
-
 }
