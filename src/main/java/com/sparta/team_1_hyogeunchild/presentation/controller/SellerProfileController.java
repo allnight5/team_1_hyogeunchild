@@ -1,9 +1,11 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
 
+import com.sparta.team_1_hyogeunchild.business.dto.MessageResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.SellerProfileResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.SellerResponseDto;
 import com.sparta.team_1_hyogeunchild.business.service.SellerService;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
+import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.presentation.dto.CategoryRequestDto;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.Getter;
@@ -34,7 +36,11 @@ public class SellerProfileController {
     public String deleteCategory(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return sellerService.deleteCategory(id, (Seller) userDetails.getUser());
     }
-    // 3. 판매자 프로필 조회
+    // 3. 판매자 삭제
+    @DeleteMapping("/{id}")
+    public MessageResponseDto deleteSeller(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return sellerService.deleteSeller(id, (Seller) userDetails.getUser());
+    }
 
 
 

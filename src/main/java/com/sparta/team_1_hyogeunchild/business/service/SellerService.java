@@ -1,5 +1,6 @@
 package com.sparta.team_1_hyogeunchild.business.service;
 
+import com.sparta.team_1_hyogeunchild.business.dto.MessageResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.SellerProfileResponseDto;
 import com.sparta.team_1_hyogeunchild.business.dto.SellerResponseDto;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Category;
@@ -20,7 +21,6 @@ import static com.sparta.team_1_hyogeunchild.enums.MessageEnum.*;
 @Service
 @RequiredArgsConstructor
 public class SellerService {
-
     private final CategoryRepository categoryRepository;
     private final SellerRepository sellerRepository;
     //1.카테고리 생성
@@ -45,5 +45,15 @@ public class SellerService {
             throw new IllegalArgumentException("자신의 태그만 삭제할 수 있습니다.");
         }
         return DELETE_CATEGORY_SUCCESS.getMessage();
+    }
+
+    @Transactional
+    public MessageResponseDto deleteSeller(Long id, Seller seller) {
+        Seller seller1 = sellerRepository.findByIdAndUsername(id, seller.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("그런 사람 없습니다")
+        );
+        categoryRepository.deleteAllBySellerId(seller1.getId());
+        sellerRepository.delete(seller1);
+        return new MessageResponseDto("삭제 완료");
     }
 }

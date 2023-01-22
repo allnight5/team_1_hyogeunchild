@@ -50,7 +50,6 @@ public class AdminService {
             Seller seller = Seller.builder()
                     .storeName(promote.getStoreName())
                     .introduce(promote.getIntroduce())
-                    .category(promote.getCategory())
                     .password(promote.getUser().getPassword())
                     .role(UserRoleEnum.SELLER)
                     .username(promote.getNewName())
@@ -139,7 +138,7 @@ public class AdminService {
         // sort의 경우, 위에서 만든 정렬 방식이다 어떠한 것을 기준으로 정렬할것인지 하는것이다.
         return PageRequest.of(page-1, size, sort);
     }
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "10 * * * * *")
     @Transactional
     public void deleteList() {
         List<Promote> promotes = promoteRepository.findAllByIsPromoted(1);
