@@ -59,27 +59,6 @@ public class AdminService {
             sellerRepository.save(seller);
         return new MessageResponseDto("판매자로 승급 신청이 승인되었습니다.");
     }
-    //2. 판매자 자격 박탈->구매자
-    //buyerAuthorization or promoteLossOfAuthority
-    @Transactional
-    public MessageResponseDto degradeSeller(Long promoteId){
-        Promote promote = promoteRepository.findById(promoteId).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 승급신청 번호입니다.")
-        );
-        // Buyer 만 승급신청을 할 수 있으므로, User/Promote 객체의 체커로직은 불필요합니다.
-
-        Seller seller = Seller.builder()
-                .storeName(promote.getStoreName())
-                .introduce(promote.getIntroduce())
-                .password(promote.getUser().getPassword())
-                .role(promote.getUser().getRole())
-                .username(promote.getUser().getUsername())
-                .build();
-
-        sellerRepository.save(seller);
-        userRepository.deleteByUsername(promote.getUser().getUsername());
-        return new MessageResponseDto("판매자로 승급 신청이 승인되었습니다.");
-    }
     //3. 유저 목록 조회
     @Transactional
     public List<AdminBuyersResponseDto> getBuyer(int page, int size){

@@ -35,7 +35,7 @@ public class UserController {
     //->@RequestBody 어노테이션 옆에 @Valid를 작성하면, RequestBody로 들어오는 객체에 대한 검증을 수행한다.
     // 이 검증의 세부적인 사항은 객체 안에 정의를 해두어야 한다.ex)정규표현식
     @PostMapping("/signup")
-    public MessageResponseDto signupPage(@RequestBody @Valid SignUpRequestDto signupRequestDto) {
+    public MessageResponseDto signup(@RequestBody @Valid SignUpRequestDto signupRequestDto) {
         return userService.signUp(signupRequestDto);
     }
     //2.로그인
@@ -86,7 +86,6 @@ public class UserController {
             @RequestPart("nickName") ProfileRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
-
         return userService.createProfile(file, requestDto, userDetails.getUser());
     }
 

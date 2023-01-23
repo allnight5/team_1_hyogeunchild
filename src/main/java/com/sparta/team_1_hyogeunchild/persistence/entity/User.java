@@ -24,16 +24,17 @@ public class User extends Timestaped {
     private String password;
     @Column
     private String image;
-    @Column
+    @Column(nullable = false)
     private String nickName;
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    public User(String username, String password, UserRoleEnum role){
+    public User(String username, String password, UserRoleEnum role, String nickName){
         this.username =username;
         this.password = password;
         this.role = role;
+        this.nickName = nickName;
     }
     public void changeProfile(String nickName, String image){
         this.nickName = nickName;

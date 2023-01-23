@@ -44,6 +44,7 @@ public class UserService {
     public MessageResponseDto signUp(SignUpRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
+        String nickName = requestDto.getNickName();
 
         Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
@@ -56,7 +57,7 @@ public class UserService {
             }
             role = UserRoleEnum.ADMIN;
         }
-        User user = new User(username, password, role);
+        User user = new User(username, password, role, nickName);
         userRepository.save(user);
         return new MessageResponseDto("회원가입 성공");
     }
@@ -148,7 +149,7 @@ public class UserService {
     //7. 유저 프로필 생성
     @Transactional
     public String createProfile(MultipartFile file, ProfileRequestDto requestDto, User user){
-        String saveLocal = "C:/Users/mind/sparta_java/team_1_hyogeunchild/src/main/resources/static/image/";
+        String saveLocal = "C:\\Users\\laanc\\Desktop\\Infrun\\team_1_hyogeunchild\\src\\main\\resources\\static\\image\\";
         String saveImageName = user.getUsername();
         String updateImageData= saveLocal+saveImageName;
         user.changeProfile(requestDto.getNickName(), updateImageData);
@@ -156,7 +157,9 @@ public class UserService {
         userRepository.save(user);
         return "생성이 완료되었습니다.";
     }
-
+    // AWS S2 < 요거 써서 이미지용 DB 만드는데... 이거 아니니까 노상관?
+    // 왜냐면 서버가 직접 로컬에 저장할일이 없을 듯 하여서?
+    // 그래서 그냥 remote 링크만 사용자에게 저장하고.
     @Transactional
     public SellerResponseDto getSeller(Long id){
         Seller seller = sellerRepository.findById(id).orElseThrow(
