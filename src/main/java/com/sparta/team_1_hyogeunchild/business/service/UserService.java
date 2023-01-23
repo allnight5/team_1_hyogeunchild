@@ -149,7 +149,7 @@ public class UserService {
     //7. 유저 프로필 생성
     @Transactional
     public String createProfile(MultipartFile file, ProfileRequestDto requestDto, User user){
-        String saveLocal = "C:\\Users\\laanc\\Desktop\\Infrun\\team_1_hyogeunchild\\src\\main\\resources\\static\\image\\";
+        String saveLocal = "local";
         String saveImageName = user.getUsername();
         String updateImageData= saveLocal+saveImageName;
         user.changeProfile(requestDto.getNickName(), updateImageData);

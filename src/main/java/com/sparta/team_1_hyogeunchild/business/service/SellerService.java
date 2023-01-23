@@ -54,9 +54,12 @@ public class SellerService {
         Seller seller = sellerRepository.findByUsername(user.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("그런 사람 없습니다")
         );
+        // 쿼리가 긴 이유 -> 조인해서 날라가니까. left outer join 입니다.
         categoryRepository.deleteAllBySellerId(seller.getId());
         productRepository.deleteAllByUsername(seller.getUsername());
+        // 위에놈들은 내가 직접 쿼리짜서 하나만 날라가지만
         sellerRepository.delete(seller);
+        // 이놈은 JPA 에서 상속 구현할 때의 한계. 자식 객체 조회/삭제등에 쿼리 두번씩 날라감.(큰 단점은 아니라고 하긴 함~)
         return new MessageResponseDto("삭제 완료");
     }
 }

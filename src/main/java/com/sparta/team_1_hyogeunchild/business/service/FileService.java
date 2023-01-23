@@ -14,7 +14,7 @@ public class FileService {
 
 //    @Value("${upload.image.location}")
 //    private String location;
-    private String location = "C:/Users/mind/sparta_java/team_1_hyogeunchild/src/main/resources/static/image/";
+    private final String location = "C:\\Users\\laanc\\Desktop\\Infrun\\team_1_hyogeunchild\\src\\main\\resources\\static\\image\\";
     @PostConstruct
     void postConstruct(){
         File dir = new File(location);
@@ -24,7 +24,7 @@ public class FileService {
     }
     public void upload(MultipartFile file, String fineName){
         try{
-            file.transferTo(new File(location+fineName));
+            file.transferTo(new File(location+fineName + ".jpg"));
         }catch(IOException e){
             log.error(e.getMessage());
         }

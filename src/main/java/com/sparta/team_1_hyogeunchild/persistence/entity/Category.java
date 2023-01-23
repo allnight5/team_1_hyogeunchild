@@ -19,7 +19,7 @@ public class Category {
     @Column(nullable = false)
     private String tag; // ex) 고양이 / 고양이모래 등등 ~
     @ManyToOne
-    @JoinColumn(name="Seller_ID", nullable = false)
+    @JoinColumn(name="User_ID", nullable = false)
     private Seller seller;
     @Builder
     public Category(Seller seller, String tag){
