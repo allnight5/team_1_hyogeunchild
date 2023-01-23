@@ -15,7 +15,7 @@ public class OrderResponseDto {
     private String storeName;
     private Long price;
 
-    public OrderResponseDto(Order order) {
+    private OrderResponseDto(Order order) {
         this.id = order.getId();
         this.totalPrice = order.getTotalPrice();
         this.amount = order.getAmount();

@@ -38,7 +38,7 @@ public class OrderService {
                 () -> new IllegalArgumentException("판매자가 없습니다.")
         );
         Page<Order> orders = orderRepository.findAllByStoreName(seller.getStoreName(), pageable);
-        return orders.stream().map(OrderResponseDto::new).collect(Collectors.toList());
+        return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
     }
     public Pageable pageableSetting(int page){
         Sort.Direction direction = Sort.Direction.ASC;

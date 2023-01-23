@@ -16,12 +16,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
-    //1.구매자 -> 판매자로 승급
+    //1.판매자 대기중 조회
     @GetMapping("/promote")
     public List<PromoteUserResponseDto> getPromoteList(@PageableDefault Pageable pageable){
         return adminService.getPromoteList(pageable.getPageNumber(),pageable.getPageSize());
-    } // 아니 근데 name만 받고...승급시켜줘도 되는거야? -> 돼. 인증 객체, 그것도 본인만 promote 신청을 할 수 있게 해놨어.
+    }
 
+    // 아니 근데 name만 받고...승급시켜줘도 되는거야? -> 돼. 인증 객체, 그것도 본인만 promote 신청을 할 수 있게 해놨어.
+    //2.구매자 -> 판매자로 승급
     @PutMapping("/promote/{id}")
     public MessageResponseDto promote(@PathVariable Long id){
         return adminService.promoteBuyer(id);

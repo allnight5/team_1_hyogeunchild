@@ -36,8 +36,13 @@ public class User extends Timestaped {
         this.role = role;
         this.nickName = nickName;
     }
+    public void updateSellerUser(String image,String nickName){
+        this.nickName = nickName;
+        this.image = image;
+    }
     public void changeProfile(String nickName, String image){
         this.nickName = nickName;
         this.image =image;
     }
+
 }

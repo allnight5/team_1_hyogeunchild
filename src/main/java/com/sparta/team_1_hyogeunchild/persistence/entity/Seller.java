@@ -20,13 +20,19 @@ public class Seller extends User {
     @Column(nullable = false)
     private String introduce;
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Category> categories;
+    private final List<Category> categories = new ArrayList<>();
+
     @Builder
-    public Seller(String username, String password, UserRoleEnum role, String nickName, String storeName, String introduce, List<Category> categories) {
+    public Seller(String username, String password, UserRoleEnum role, String nickName, String storeName, String introduce) {
         super(username, password, role, nickName);
         this.storeName = storeName;
         this.introduce = introduce;
-        this.categories = categories;
+    }
+
+    public void updateSeller(String image, String nickname, String introduce, String storeName){
+        super.updateSellerUser(image, nickname);
+        this.introduce = introduce;
+        this.storeName= storeName;
     }
 
     // 문제? -> Seller 인스턴스가 +1 되는거에요. USER1 -> SELLER / USER2 이자 Seller < / Buyer로도 주고 Seller 로도 주면 로그인 부분이 좀 문제가 있을 수가 있다.<
