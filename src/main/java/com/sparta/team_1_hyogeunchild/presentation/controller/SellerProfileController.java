@@ -25,7 +25,7 @@ public class SellerProfileController {
     //1. 카테고리 변경
     @PostMapping("/category")
     @PreAuthorize("hasRole('SELLER')")
-    public String createCategory(@RequestBody CategoryRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public MessageResponseDto createCategory(@RequestBody CategoryRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return sellerService.createCategory(requestDto, (Seller) userDetails.getUser());
         // 여기서 캐스팅을 한 건 가능하다는 것을 보여드리기 위함입니다.
         // userDetails 의 userId를 가져와서 findById를 해도 됩니다. DB에 한번 더 들러야 한다는 단점이 있습니다.
@@ -33,13 +33,13 @@ public class SellerProfileController {
     //2. 카테고리 삭제
     @DeleteMapping("/category/{id}")
     @PreAuthorize("hasRole('SELLER')")
-    public String deleteCategory(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public MessageResponseDto deleteCategory(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return sellerService.deleteCategory(id, (Seller) userDetails.getUser());
     }
     // 3. 판매자 삭제
-    @DeleteMapping("/{id}")
-    public MessageResponseDto deleteSeller(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return sellerService.deleteSeller(id, (Seller) userDetails.getUser());
+    @DeleteMapping("/delete")
+    public MessageResponseDto deleteSeller(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return sellerService.deleteSeller(userDetails.getUser());
     }
 
 

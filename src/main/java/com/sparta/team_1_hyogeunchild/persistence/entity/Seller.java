@@ -30,6 +30,6 @@ public class Seller extends User {
     public Seller(String username, String password, UserRoleEnum role, String storeName, String introduce) {
         super(username, password, role);
         this.storeName = storeName;
-        this.introduce = introduce;
+        this.introduce = introduce; // 1번 바이어 계정, 2번 어드민이 1번 승급시켜주면 (다른이름)
     }
 }
