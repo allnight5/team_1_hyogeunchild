@@ -63,5 +63,4 @@ public class SellerProfileController {
     public SellerProfileResponseDto getSellerProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return sellerService.getSellerProfile(userDetails.getUsername());
     }
-
 }

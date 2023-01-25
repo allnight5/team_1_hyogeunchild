@@ -7,6 +7,7 @@ import com.sparta.team_1_hyogeunchild.persistence.entity.Category;
 import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
 import com.sparta.team_1_hyogeunchild.persistence.entity.User;
 import com.sparta.team_1_hyogeunchild.persistence.repository.CategoryRepository;
+import com.sparta.team_1_hyogeunchild.persistence.repository.OrderRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.ProductRepository;
 import com.sparta.team_1_hyogeunchild.persistence.repository.SellerRepository;
 import com.sparta.team_1_hyogeunchild.presentation.dto.CategoryRequestDto;
@@ -28,6 +29,7 @@ public class SellerService {
     private final SellerRepository sellerRepository;
     private final ProductRepository productRepository;
     private final FileService fileService;
+    private final OrderRepository orderRepository;
     //1.카테고리 생성
     @Transactional
     public MessageResponseDto createCategory(CategoryRequestDto requestDto, Seller seller){
@@ -62,6 +64,7 @@ public class SellerService {
         // 쿼리가 긴 이유 -> 조인해서 날라가니까. left outer join 입니다.
         categoryRepository.deleteAllBySellerId(seller.getId());
         productRepository.deleteAllByUsername(seller.getUsername());
+        orderRepository.deleteAllByUserId(seller.getId());
         // 위에놈들은 내가 직접 쿼리짜서 하나만 날라가지만
         sellerRepository.delete(seller);
         // 이놈은 JPA 에서 상속 구현할 때의 한계. 자식 객체 조회/삭제등에 쿼리 두번씩 날라감.(큰 단점은 아니라고 하긴 함~)
