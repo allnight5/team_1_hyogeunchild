@@ -89,11 +89,17 @@ public class UserController {
         return userService.createProfile(file, requestDto, userDetails.getUser());
     }
 
+    //8. 선택한 판매자 프로틸 조회
     @GetMapping("/seller/{id}")
     public SellerResponseDto getSeller(@PathVariable Long id){
         return userService.getSeller(id);
     }
 
+    //9. 유저 프로필 조회
+    @GetMapping("/profile")
+    public UserProfileResponseDto getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.getUserProfile(userDetails.getUsername());
+    }
     //8.유저 프로필 이미지 변경
 
     //@GetMapping("/admin/sellerlist")

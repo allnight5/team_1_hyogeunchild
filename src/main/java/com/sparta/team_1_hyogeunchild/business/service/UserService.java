@@ -157,6 +157,14 @@ public class UserService {
         userRepository.save(user);
         return "생성이 완료되었습니다.";
     }
+    //8.유저 프로필 조회
+    @Transactional
+    public UserProfileResponseDto getUserProfile(String username){
+        User user = userRepository.findByUsername(username).orElseThrow(
+                ()-> new IllegalArgumentException("연결상태 불량입니다 다시 유저조회해주시기 바랍니다.")
+        );
+        return UserProfileResponseDto.from(user);
+    }
     // AWS S2 < 요거 써서 이미지용 DB 만드는데... 이거 아니니까 노상관?
     // 왜냐면 서버가 직접 로컬에 저장할일이 없을 듯 하여서?
     // 그래서 그냥 remote 링크만 사용자에게 저장하고.

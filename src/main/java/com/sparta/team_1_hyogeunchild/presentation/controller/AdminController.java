@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
-    //1.판매자 대기중 조회
+    //1.판매자 조회
     @GetMapping("/promote")
     public List<PromoteUserResponseDto> getPromoteList(@PageableDefault Pageable pageable){
         return adminService.getPromoteList(pageable.getPageNumber(),pageable.getPageSize());
