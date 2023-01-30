@@ -1,11 +1,14 @@
 package com.sparta.team_1_hyogeunchild.security.config;
 
+import com.sparta.team_1_hyogeunchild.security.exception.CustomAccessDeniedHandler;
+import com.sparta.team_1_hyogeunchild.security.exception.CustomAuthenticationEntryPoint;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtAuthFilter;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,11 +23,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
-@EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
+@EnableGlobalMethodSecurity(prePostEnabled = true) // @Secured 어노테이션 활성화
+@EnableScheduling // @Scheduled 어노테이션 활성화
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
-
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -59,22 +64,26 @@ public class WebSecurityConfig {
                 // 잘못하면 두번인증한다. 로그인창으로 바로 이동하게 해주자.
                 // http에서 해본게 아니라서 이걸 회원가입만 열어야할지 로그인만 열어야할지 둘다열어야하는지
                 // http에서 해본사람만 알것이다.
-                .antMatchers("/api/users/**").permitAll()
-                .antMatchers("/h2-console").permitAll()
-//                .antMatchers("/api/seller").hasAnyAuthority("ROLE_SELLER", "ROLE_ADMIN")
-//                .antMatchers("/api/admin").hasAnyAuthority("ROLE_ADMIN")
 //                .requestMatchers("/api/post/get/**/comment").permitAll()
+                .antMatchers("/users/**").permitAll()
+                .antMatchers("/h2-console").permitAll()
+                .antMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers("/api/products/**").hasAnyAuthority("ROLE_SELLER")
                 .anyRequest().authenticated()//인증이 되어야 한다는 이야기이다.
                 //.anonymous() : 인증되지 않은 사용자도 접근할 수 있다.
                 // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-//                .formLogin().failureHandler();
+                // 401 Error 처리, Authorization 즉, 인증과정에서 실패할 시 처리
+                http.exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint);
+                // 403 Error 처리, 인증과는 별개로 추가적인 권한이 충족되지 않는 경우
+                http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
 
+//                .formLogin().failureHandler();
+//                http.exceptionHandling().accessDeniedHandler(new AccessDeniedHandlerImpl());
 //        http.formLogin().loginPage("/api/user/login-page").permitAll();
         // 이 부분에서 login 관련 문제 발생
         // jwt 로그인 방식에서는 세션 로그인 방식을 막아줘야 한다.
 //        http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
-
         return http.build();
     }
 }

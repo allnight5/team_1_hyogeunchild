@@ -8,5 +8,5 @@ public class ProductRequestDto {
     private String productName;
     private Long amount;
     private Long price;
-    private String storeName;
+
 }

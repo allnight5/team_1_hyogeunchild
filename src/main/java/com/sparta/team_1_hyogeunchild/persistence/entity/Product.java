@@ -1,6 +1,7 @@
 package com.sparta.team_1_hyogeunchild.persistence.entity;
 
 import com.sparta.team_1_hyogeunchild.business.dto.ProductRequestDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @Entity(name="product")
 @NoArgsConstructor
 @Getter
-public class Product {
+public class Product extends Timestaped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name ="Product_ID")
@@ -21,24 +22,24 @@ public class Product {
     @Column(nullable = false)
     private Long price;
     @Column(nullable = false)
+    private String username;
+    @Column(nullable = false)
     private String storeName;
-    @ManyToOne
-    @JoinColumn(name = "User_Id")
-    private User user;
 
-    public Product(ProductRequestDto requestDto, User user) {
-        this.productName = requestDto.getProductName();
-        this.price = requestDto.getPrice();
-        this.amount = requestDto.getAmount();
-        this.storeName = requestDto.getStoreName();
-        this.user = user;
+    @Builder
+    public Product(Long id, String productName, Long amount, Long price, String storeName, String username) {
+        this.id = id;
+        this.productName = productName;
+        this.amount = amount;
+        this.price = price;
+        this.storeName = storeName;
+        this.username = username;
     }
-
 
     public void update(ProductRequestDto requestDto) {
         this.productName = requestDto.getProductName();
         this.amount = requestDto.getAmount();
         this.price = requestDto.getPrice();
-        this.storeName = requestDto.getStoreName();
+        this.storeName = requestDto.getProductName();
     }
 }

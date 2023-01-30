@@ -1,25 +1,27 @@
 package com.sparta.team_1_hyogeunchild.presentation.controller;
-import com.sparta.team_1_hyogeunchild.business.dto.CreateResponseDto;
-import com.sparta.team_1_hyogeunchild.business.dto.DeleteResponseDto;
-import com.sparta.team_1_hyogeunchild.business.dto.LoginResponseDto;
-import com.sparta.team_1_hyogeunchild.business.dto.PromoteResponseDto;
+import com.sparta.team_1_hyogeunchild.business.dto.*;
+import com.sparta.team_1_hyogeunchild.business.service.SellerService;
 import com.sparta.team_1_hyogeunchild.business.service.UserService;
-import com.sparta.team_1_hyogeunchild.presentation.dto.LoginRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.PromoteRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.SignUpRequestDto;
-import com.sparta.team_1_hyogeunchild.presentation.dto.UserDeleteRequestDto;
+import com.sparta.team_1_hyogeunchild.persistence.entity.Seller;
+import com.sparta.team_1_hyogeunchild.presentation.dto.*;
 import com.sparta.team_1_hyogeunchild.security.jwt.JwtUtil;
 import com.sparta.team_1_hyogeunchild.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 //메서드 혹은 클래스 단위로 Mapping을 주어 중복 URL을 공통으로 처리할 수 있다
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 // final이 붙거나 @NotNull 이 붙은 필드의 생성자를 자동 생성해주는 롬복 어노테이션
 @RequiredArgsConstructor
 public class UserController {
@@ -33,42 +35,72 @@ public class UserController {
     //->@RequestBody 어노테이션 옆에 @Valid를 작성하면, RequestBody로 들어오는 객체에 대한 검증을 수행한다.
     // 이 검증의 세부적인 사항은 객체 안에 정의를 해두어야 한다.ex)정규표현식
     @PostMapping("/signup")
-    public CreateResponseDto signupPage(@RequestBody @Valid SignUpRequestDto signupRequestDto) {
-        CreateResponseDto msg =userService.signUp(signupRequestDto);
-        return msg;
+    public MessageResponseDto signup(@RequestBody @Valid SignUpRequestDto signupRequestDto) {
+        return userService.signUp(signupRequestDto);
     }
     //2.로그인
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public MessageResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         //이름과 유저인지 관리자인지 구분한 토큰을 가져오는 부분
-        LoginResponseDto msg = userService.login(loginRequestDto);
+        MessageResponseDto msg = userService.login(loginRequestDto);
         //문자열 token에 가져온 정보를 넣어주는 부분
         String token = msg.getMessage();
         //헤더를 통해 토큰을 발급해 주는 부분
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
-        return new LoginResponseDto("로그인 되었습니다.");
+        return new MessageResponseDto("로그인 되었습니다.");
     }
     //3.유저 삭제
     @DeleteMapping("/delete")
     //@AuthenticationPrincipal -> 세션 정보 UserDetails에 접근할 수 있는 어노테이션
     //현재 로그인한 사용자 객체를 가져오기 위해 필요
-    public DeleteResponseDto delete(@RequestBody UserDeleteRequestDto deleteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public MessageResponseDto delete(@RequestBody UserDeleteRequestDto deleteRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return userService.deleteUser(deleteRequestDto, userDetails.getUser());
     }
-    //4.구매자 -> 판매자로 승급
-    @PutMapping("/admin/rollauthorized")
-    public PromoteResponseDto promoteAuthorization(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.promoteAuthorization(requestDto, userDetails.getUser());
+    //4. 판매자로 요청
+    @PostMapping("/promote")
+    @PreAuthorize("hasRole('BUYER')")
+    public PromoteUserResponseDto promoteUser(@RequestBody @Valid PromoteUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.promoteUser(requestDto, userDetails.getUser());
+    }
+    //4-1. 판매자 요청 승인 전 취소
+    @DeleteMapping("/promote")
+    @PreAuthorize("hasRole('BUYER')")
+    public String deletePromote(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        userService.deletePromote(userDetails.getUser());
+        return "삭제 완료되었습니다.";
+    }
+    //5. 판매자 목록조회
+    @GetMapping("/sellerlist")
+    public List<SellerResponseDto> getAllSellers(@PageableDefault Pageable pageable){
+        return userService.getAllSellers(pageable.getPageNumber());
+    }
+    //6. 판매 상품 목록 조회
+    @GetMapping("/products")
+    public List<ProductResponseDto> getAllSProducts(@PageableDefault Pageable pageable){
+        return userService.getAllProducts(pageable.getPageNumber());
+    }
+    //7.유저 프로필 이미지 추가
+    @PostMapping("/profile")
+    public String createProfile(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("nickName") ProfileRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        return userService.createProfile(file, requestDto, userDetails.getUser());
     }
 
-    //5. 판매자 자격 박탈->구매자
-    @PutMapping("/admin/rolldelete")
-    public PromoteResponseDto buyerAuthorization(@RequestBody PromoteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return userService.promoteLossOfAuthority(requestDto, userDetails.getUser());
+    //8. 선택한 판매자 프로틸 조회
+    @GetMapping("/seller/{id}")
+    public SellerResponseDto getSeller(@PathVariable Long id){
+        return userService.getSeller(id);
     }
 
-    //@GetMapping("/admin/buyerlist")
-    //6. 유저목록조회
+    //9. 유저 프로필 조회
+    @GetMapping("/profile")
+    public UserProfileResponseDto getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.getUserProfile(userDetails.getUsername());
+    }
+    //8.유저 프로필 이미지 변경
 
     //@GetMapping("/admin/sellerlist")
     //7. 판매자 목록조회
